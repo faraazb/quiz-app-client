@@ -17,14 +17,17 @@ const Question = (props) => {
     const [cardClass, setCardClass] = useState("questionsCard");
 
     useEffect(() => {
+        //add error class to question card if errorMessage is given
         if (errorMessage) setCardClass("questionsCard error");
         else setCardClass("questionsCard");
     }, [errorMessage]);
 
+    //title text change handler
     const titleOnChangeHandler = (event) => {
         const {
             target: { value },
         } = event;
+        //set error message if title not given
         if (value.length < 1) {
             setTitleStatus("error");
             setErrorMessage("Title should be given");
@@ -32,9 +35,6 @@ const Question = (props) => {
             setTitleStatus("");
             setErrorMessage("");
         }
-    };
-    const setError = (errorMessage) => {
-        setError(errorMessage);
     };
 
     return (

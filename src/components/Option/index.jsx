@@ -6,7 +6,10 @@ import ErrorMessage from "../ErrorMessage";
 import "./index.css";
 
 const Option = (props) => {
+    //on minus button click removeOnclickHander is called
+    //removeOnClickHandler takes two args event , parentKey
     const { removeOnClickHandler, parentKey } = props;
+
     const [errorMessage, setErrorMessage] = useState("");
     const [optionStatus, setOptionStatus] = useState("");
     const optionOnChangeHandler = (event) => {

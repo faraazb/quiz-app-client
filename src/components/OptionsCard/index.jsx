@@ -13,7 +13,9 @@ const gridStyle = {
 const OptionsCard = () => {
     const [optionList, setOptionList] = useState([]);
 
+    //Function to add a new option
     const addOptionClickHandler = () => {
+        //unique id for each option
         const optionKey = uniqid();
         const newOption = (
             <Card.Grid style={gridStyle} key={optionKey} hoverable={false}>
@@ -26,11 +28,15 @@ const OptionsCard = () => {
         setOptionList(optionList.concat(newOption));
     };
 
+    //Function to remove a option from optionList if key provided
     const removeOptionClickHandler = (event, key) => {
+        if (!key) return;
         setOptionList((optionList) => {
+            //remove option from option list if its key matches
             return optionList.filter((option) => option.key != key);
         });
     };
+    
     return (
         <div className="optionContainer">
             <Card

@@ -16,7 +16,7 @@ const OptionsCard = () => {
     const addOptionClickHandler = () => {
         const optionKey = uniqid();
         const newOption = (
-            <Card.Grid style={gridStyle} key={optionKey}>
+            <Card.Grid style={gridStyle} key={optionKey} hoverable={false}>
                 <Option
                     removeOnClickHandler={removeOptionClickHandler}
                     parentKey={optionKey}

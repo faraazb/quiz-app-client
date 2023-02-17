@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Button, Checkbox } from "antd";
+import { Button, Checkbox, Tooltip } from "antd";
 import Input from "antd/es/input/Input";
 import { MinusOutlined } from "@ant-design/icons";
 import ErrorMessage from "../ErrorMessage";
 import "./index.css";
-
+const toolTipText = <span>Is it a answer?</span>;
 const Option = (props) => {
     //on minus button click removeOnclickHander is called
     //removeOnClickHandler takes two args event , parentKey
@@ -29,7 +29,11 @@ const Option = (props) => {
             <Input
                 placeholder="option"
                 allowClear={true}
-                addonBefore={<Checkbox />}
+                addonBefore={
+                    <Tooltip placement="top" title={toolTipText}>
+                        <Checkbox />
+                    </Tooltip>
+                }
                 status={optionStatus}
                 onChange={optionOnChangeHandler}
                 onBlur={optionOnChangeHandler}

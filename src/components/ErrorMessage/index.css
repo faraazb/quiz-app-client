@@ -1,3 +1,5 @@
-.errorMessageDefault{
+.errorMessageDefault {
     color: red;
+    font-size: 1rem;
+    margin: 0;
 }

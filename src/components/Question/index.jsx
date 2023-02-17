@@ -1,4 +1,4 @@
-import { Card, Button } from "antd";
+import { Card, Button, InputNumber, Space } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 
@@ -11,7 +11,8 @@ const headingStyle = {
     border: "none",
 };
 const Question = (props) => {
-    const { heading, removeOnClickHandler, parentKey } = props;
+    const { heading, removeOnClickHandler, parentKey, defaultPoint } = props;
+    const [questionPoint, setQuestionPoint] = useState(defaultPoint || 0);
     const [errorMessage, setErrorMessage] = useState("");
     const [titleStatus, setTitleStatus] = useState("");
     const [cardClass, setCardClass] = useState("questionsCard");
@@ -66,10 +67,28 @@ const Question = (props) => {
                     status={titleStatus}
                 />
             </div>
-            <OptionsCard />
             <div>
                 <ErrorMessage errorMessage={errorMessage} />
             </div>
+            <div className="pointContainer">
+                <InputNumber
+                    addonBefore=<label>Points</label>
+                    type="number"
+                    min={0}
+                    value={questionPoint}
+                    onChange={setQuestionPoint}
+                />
+                <Button
+                    className="button"
+                    type="primary"
+                    onClick={() => {
+                        setQuestionPoint(defaultPoint || 0);
+                    }}
+                >
+                    Reset
+                </Button>
+            </div>
+            <OptionsCard />
         </Card>
     );
 };

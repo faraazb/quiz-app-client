@@ -1,0 +1,32 @@
+.questionsCard {
+    margin: 1% 2%;
+    box-shadow: 0 0 1px 1px rgb(190, 190, 190);
+}
+.inputContainer {
+    margin: 2% 0;
+}
+.title {
+    padding: 1% 2%;
+}
+.error {
+    border: 1px solid red;
+}
+
+.pointContainer {
+    margin: 1% 0;
+    display: flex;
+    align-items: center;
+}
+.button {
+    margin: 0 1%;
+}
+
+@media (max-width: 300px) {
+    .pointContainer {
+        flex-direction: column;
+    }
+    .button {
+        margin: 1%;
+        align-self: flex-start;
+    }
+}

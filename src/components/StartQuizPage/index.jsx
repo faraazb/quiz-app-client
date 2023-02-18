@@ -3,16 +3,16 @@ import { Button, Form, Input } from 'antd';
 
 import  './index.css';
 
-const QuizStart = () => {
+const StartQuizPage = () => {
     return (
-        <div className="quizStart" >
+        <div className="startQuizPage" >
             <Form id='form'>
                 <Form.Item
                     name="username"
                     rules={[{
                         required: true,
-                        message: 'Please enter your username!',
-                        pattern: '^[a-zA-Z]+( [a-zA-Z]+)?$'
+                        message: 'Please enter a valid username!',
+                        pattern: '^[a-zA-Z._]+$'
                     }]}>
                     <Input placeholder='username' />
                 </Form.Item>
@@ -27,4 +27,4 @@ const QuizStart = () => {
     )
 };
 
-export default QuizStart;
+export default StartQuizPage;

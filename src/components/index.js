@@ -1,8 +1,8 @@
 import Header from "./Header/Header";
-import QuizStart from "./StartQuizPage/index.jsx";
+import StartQuizPage from "./StartQuizPage/index.jsx";
 
 
 export {
     Header,
-    QuizStart
+    StartQuizPage
 };

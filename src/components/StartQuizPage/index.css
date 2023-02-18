@@ -1,0 +1,9 @@
+.startQuizPage {
+    display:flex;
+    justify-content: center;
+    margin-top: 10rem;
+}
+#form .button{
+    display: flex;
+    justify-content: center;
+}

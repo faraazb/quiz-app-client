@@ -3,6 +3,9 @@ import { Card, Col, Row } from 'antd';
 import axios from "axios";
 import { Button } from 'antd';
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
+
 const DashboardPage = () => {
     const [quizzes, setQuizzes] = useState(null);
     const getQuizzes = async () => {
@@ -20,7 +23,9 @@ const DashboardPage = () => {
     }, []);
     return  (
         <div className='dashboard'>
-            <Button type="primary" href="#" shape='round'>Create Quiz</Button>
+            <Link to={"/quiz/create"}>
+                <Button type="primary" shape='round'>Create Quiz</Button>
+            </Link>
             <hr />
             <Row gutter={[10,10]} justify="center">
                 {quizzes !== null && quizzes.data.data.map((quiz) => {

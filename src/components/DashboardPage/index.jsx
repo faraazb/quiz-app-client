@@ -23,17 +23,17 @@ const DashboardPage = () => {
         <div className='dashboard'>
             <Button type="primary" href="#" shape='round'>Create Quiz</Button>
             <hr />
-            {quizzes.data.data.map((quiz) => {
-                return (
-                    <Row gutter={[10,10]} justify="center">
-                        <Col>
-                            <Card size="small" title={quiz.title} style={{ width: 200, height: 100 }}>
-                                <p>{quiz.submissionsCount} Submissions</p>
-                            </Card>
-                        </Col>
-                    </Row>
-                )
-            })} 
+            <Row gutter={[10,10]} justify="center">
+                {quizzes !== null && quizzes.data.data.map((quiz) => {
+                    return (
+                            <Col key = {quiz.id}>
+                                <Card size="small" title={quiz.title} style={{ width: 200, height: 100 }}>
+                                    <p>{quiz.submissionsCount} Submissions</p>
+                                </Card>
+                            </Col>
+                    )
+                })}
+            </Row>
         </div>
     )
 }

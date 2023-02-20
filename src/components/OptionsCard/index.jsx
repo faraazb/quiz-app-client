@@ -1,13 +1,16 @@
 import { useState } from "react";
 import uniqid from "uniqid";
 import React from "react";
-import { Card, Button } from "antd";
+import { Card, Button, Row, Col } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import Option from "../Option";
 import "./index.css";
 
-const gridStyle = {
+const gridStyleMin = {
     width: "50%",
+};
+const gridStyleMax = {
+    width: "100%",
 };
 const OptionsCard = () => {
     const [optionList, setOptionList] = useState([]);
@@ -16,12 +19,12 @@ const OptionsCard = () => {
         //unique id for each option
         const optionKey = uniqid();
         const newOption = (
-            <Card.Grid style={gridStyle} hoverable={false} key={optionKey}>
+            <Col xs={22} sm={12} hoverable={false} key={optionKey}>
                 <Option
                     removeOnClickHandler={removeOptionClickHandler}
                     parentKey={optionKey}
                 />
-            </Card.Grid>
+            </Col>
         );
         setOptionList(optionList.concat(newOption));
     };
@@ -48,7 +51,9 @@ const OptionsCard = () => {
                     />
                 }
             >
-                {optionList}
+                <Row justify="space-around" gutter={24}>
+                    {optionList}
+                </Row>
             </Card>
         </div>
     );

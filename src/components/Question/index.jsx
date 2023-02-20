@@ -1,4 +1,4 @@
-import { Card, Button, InputNumber, Space } from "antd";
+import { Card, Button, InputNumber } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 

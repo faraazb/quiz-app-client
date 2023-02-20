@@ -6,12 +6,6 @@ import { PlusOutlined } from "@ant-design/icons";
 import Option from "../Option";
 import "./index.css";
 
-const gridStyleMin = {
-    width: "50%",
-};
-const gridStyleMax = {
-    width: "100%",
-};
 const OptionsCard = () => {
     const [optionList, setOptionList] = useState([]);
     //Function to add a new option

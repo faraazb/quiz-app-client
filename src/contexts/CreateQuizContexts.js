@@ -13,6 +13,7 @@ const ACTIONS = {
     ADDQUESTION: "addQuestion",
     DELETEQUESTION: "deleteQuestion",
     UPDATEQUESTION: "updateQuestion",
+    ADDOPTION: "ADDOPTION",
 };
 
 const GetQuizContext = () => {
@@ -39,6 +40,15 @@ const quizReducer = (quiz, action) => {
             if (index === -1) return quiz;
             quiz.questions[index] = action.question;
             return { ...quiz };
+        case ACTIONS.ADDOPTION:
+            const question = quiz.questions.find(
+                (question) => question.id === action.questionId
+            );
+            if (!question) return quiz;
+            question.options.push(action.option);
+            return { ...quiz };
+        default:
+            return quiz;
     }
 };
 
@@ -66,6 +76,18 @@ const QuizProvider = (props) => {
             question: question,
         });
     };
+    const handleAddOption = (questionId) => {
+        const option = {
+            id: uniqid(),
+            isCorrect: false,
+            text: "",
+        };
+        dispatch({
+            type: ACTIONS.ADDOPTION,
+            questionId: questionId,
+            option: option,
+        });
+    };
     return (
         <quizContext.Provider value={{ quiz }}>
             <quizHandlerContext.Provider
@@ -73,6 +95,7 @@ const QuizProvider = (props) => {
                     handleAddQuestion,
                     handleDeleteQuestion,
                     handleUpdateQuestion,
+                    handleAddOption,
                 }}
             >
                 {props.children}

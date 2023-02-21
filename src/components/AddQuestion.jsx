@@ -20,7 +20,6 @@ const AddQuestion = () => {
                             <Question
                                 title={`Question ${index + 1}`}
                                 data={question}
-                                defaultPoint={quiz.settings.defaultPoints}
                             />
                         </div>
                     );

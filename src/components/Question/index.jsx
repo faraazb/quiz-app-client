@@ -1,5 +1,5 @@
 import { Card, Button, InputNumber } from "antd";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DeleteOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 
@@ -12,7 +12,7 @@ const headingStyle = {
     border: "none",
 };
 const Question = (props) => {
-    const { heading, data, defaultPoint } = props;
+    const { heading, data } = props;
     const [errorMessage, setErrorMessage] = useState("");
     const [titleStatus, setTitleStatus] = useState("");
     const [question, setQuestion] = useState(data);
@@ -102,7 +102,7 @@ const Question = (props) => {
                     Reset
                 </Button>
             </div>
-            <OptionsCard />
+            <OptionsCard parentKey={question.id} />
         </Card>
     );
 };

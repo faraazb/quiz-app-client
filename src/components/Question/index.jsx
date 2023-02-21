@@ -27,6 +27,7 @@ const Question = (props) => {
     useEffect(() => {
         handleUpdateQuestion(question);
     }, [question]);
+   
     //title text change handler
     const titleOnChangeHandler = (event) => {
         const {

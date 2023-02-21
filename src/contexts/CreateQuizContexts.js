@@ -10,11 +10,15 @@ const initialQuizState = {
     questions: [],
 };
 const ACTIONS = {
+    SETQUIZTITLE: "setQuizTitle",
+    SETQUIZDESC: "setQuizDesc",
+    SETQUIZSETTINGS: "setQuizSettings",
     ADDQUESTION: "addQuestion",
     DELETEQUESTION: "deleteQuestion",
     UPDATEQUESTION: "updateQuestion",
     ADDOPTION: "addOption",
     DELETEOPTION: "deleteOption",
+    UPDATEOPTION: "updateOption",
 };
 
 const GetQuizContext = () => {
@@ -25,7 +29,17 @@ const GetQuizHandlerContext = () => {
 };
 
 const quizReducer = (quiz, action) => {
+    let result, question;
     switch (action.type) {
+        case ACTIONS.SETQUIZTITLE:
+            quiz.title = action.title;
+            return { ...quiz };
+        case ACTIONS.SETQUIZDESC:
+            quiz.description = action.description;
+            return { ...quiz };
+        case ACTIONS.SETQUIZSETTINGS:
+            quiz.settings = action.settings;
+            return { ...quiz };
         case ACTIONS.ADDQUESTION:
             quiz.questions.push(action.question);
             return { ...quiz };
@@ -42,20 +56,31 @@ const quizReducer = (quiz, action) => {
             quiz.questions[index] = action.question;
             return { ...quiz };
         case ACTIONS.ADDOPTION:
-            const question = quiz.questions.find(
+            question = quiz.questions.find(
                 (question) => question.id === action.questionId
             );
             if (!question) return quiz;
             question.options.push(action.option);
             return { ...quiz };
         case ACTIONS.DELETEOPTION:
-            let result = quiz.questions.find(
+            result = quiz.questions.find(
                 (question) => question.id === action.questionId
             );
             if (!result) return quiz;
             result.options = result.options.filter(
                 (option) => option.id !== action.optionId
             );
+            return { ...quiz };
+        case ACTIONS.UPDATEOPTION:
+            question = quiz.questions.find(
+                (question) => question.id === action.questionId
+            );
+            if (!question) return quiz;
+            result = question.options.findIndex(
+                (option) => option.id === action.option.id
+            );
+            if (result === -1) return quiz;
+            question.options[result] = action.option;
             return { ...quiz };
         default:
             return quiz;
@@ -64,6 +89,15 @@ const quizReducer = (quiz, action) => {
 
 const QuizProvider = (props) => {
     const [quiz, dispatch] = useReducer(quizReducer, initialQuizState);
+    const handleQuizTitle = (title) => {
+        dispatch({ type: ACTIONS.SETQUIZTITLE, title });
+    };
+    const handleQuizDescription = (description) => {
+        dispatch({ type: ACTIONS.SETQUIZDESC, description });
+    };
+    const handleQuizSettings = (settings) => {
+        dispatch({ type: ACTIONS.SETQUIZSETTINGS, settings });
+    };
     const handleAddQuestion = () => {
         const questionId = uniqid();
         const question = {
@@ -83,7 +117,7 @@ const QuizProvider = (props) => {
     const handleUpdateQuestion = (question) => {
         dispatch({
             type: ACTIONS.UPDATEQUESTION,
-            question: question,
+            question,
         });
     };
     const handleAddOption = (questionId) => {
@@ -94,26 +128,37 @@ const QuizProvider = (props) => {
         };
         dispatch({
             type: ACTIONS.ADDOPTION,
-            questionId: questionId,
-            option: option,
+            questionId,
+            option,
         });
     };
     const handleDeleteOption = (questionId, optionId) => {
         dispatch({
             type: ACTIONS.DELETEOPTION,
-            questionId: questionId,
-            optionId: optionId,
+            questionId,
+            optionId,
+        });
+    };
+    const handleUpdateOption = (questionId, option) => {
+        dispatch({
+            type: ACTIONS.UPDATEOPTION,
+            questionId,
+            option,
         });
     };
     return (
         <quizContext.Provider value={{ quiz }}>
             <quizHandlerContext.Provider
                 value={{
+                    handleQuizTitle,
+                    handleQuizDescription,
+                    handleQuizSettings,
                     handleAddQuestion,
                     handleDeleteQuestion,
                     handleUpdateQuestion,
                     handleAddOption,
                     handleDeleteOption,
+                    handleUpdateOption,
                 }}
             >
                 {props.children}

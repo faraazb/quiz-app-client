@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Checkbox, Tooltip } from "antd";
 import Input from "antd/es/input/Input";
 import { MinusOutlined } from "@ant-design/icons";
@@ -14,8 +14,11 @@ const Option = (props) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [optionStatus, setOptionStatus] = useState("");
     const [option, setOption] = useState(data);
-    const { handleDeleteOption } = GetQuizHandlerContext();
+    const { handleDeleteOption, handleUpdateOption } = GetQuizHandlerContext();
 
+    useEffect(() => {
+        handleUpdateOption(questionKey, option);
+    }, [option]);
     const optionOnChangeHandler = (event) => {
         const {
             target: { value },
@@ -27,6 +30,19 @@ const Option = (props) => {
             setOptionStatus("");
             setErrorMessage("");
         }
+        setOption((oldOption) => {
+            oldOption.text = value;
+            return { ...oldOption };
+        });
+    };
+    const checkboxOnChange = (event) => {
+        const {
+            target: { checked },
+        } = event;
+        setOption((oldOption) => {
+            oldOption.isCorrect = checked;
+            return { ...oldOption };
+        });
     };
     return (
         <div>
@@ -36,7 +52,7 @@ const Option = (props) => {
                 value={option.text}
                 addonBefore={
                     <Tooltip placement="top" title={toolTipText}>
-                        <Checkbox />
+                        <Checkbox onChange={checkboxOnChange} />
                     </Tooltip>
                 }
                 status={optionStatus}

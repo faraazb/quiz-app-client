@@ -1,5 +1,3 @@
-import { useState } from "react";
-import uniqid from "uniqid";
 import React from "react";
 import { Card, Button, Row, Col } from "antd";
 import { PlusOutlined } from "@ant-design/icons";

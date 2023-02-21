@@ -10,7 +10,7 @@ import Question from "./Question";
 const AddQuestion = () => {
     const { quiz } = useContext(quizContext);
     const { handleAddQuestion } = useContext(quizFunctionsContext);
-    console.log("Quiz", quiz, "handleAddQuestion", handleAddQuestion);
+    console.log("Quiz", quiz);
     return (
         <div style={{ margin: "5%" }}>
             <Button onClick={handleAddQuestion}>Add Question</Button>

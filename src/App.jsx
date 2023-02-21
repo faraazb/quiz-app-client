@@ -1,7 +1,7 @@
 import { Header } from "./components";
 import "./App.css";
 import { Outlet } from "react-router-dom";
-import { QuizState } from "./contexts/CreateQuizContexts";
+import { QuizProvider } from "./contexts/CreateQuizContexts";
 import AddQuestion from "./components/AddQuestion";
 
 function App() {
@@ -9,9 +9,9 @@ function App() {
         <div className="app">
             <Header />
             <main>
-                <QuizState>
+                <QuizProvider>
                     <AddQuestion />
-                </QuizState>
+                </QuizProvider>
                 <Outlet />
             </main>
         </div>

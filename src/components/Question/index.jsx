@@ -1,11 +1,15 @@
 import { Card, Button, InputNumber } from "antd";
+import { useContext, useEffect, useState } from "react";
 import { DeleteOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 
 import ErrorMessage from "../ErrorMessage";
 import OptionsCard from "../OptionsCard";
+import {
+    quizContext,
+    quizFunctionsContext,
+} from "../../contexts/CreateQuizContexts";
 import "./index.css";
-import { useEffect, useState } from "react";
 
 const headingStyle = {
     border: "none",
@@ -16,7 +20,7 @@ const Question = (props) => {
     const [errorMessage, setErrorMessage] = useState("");
     const [titleStatus, setTitleStatus] = useState("");
     const [cardClass, setCardClass] = useState("questionsCard");
-
+    const { handleDeleteQuestion } = useContext(quizFunctionsContext);
     useEffect(() => {
         //add error class to question card if errorMessage is given
         if (errorMessage) setCardClass("questionsCard error");
@@ -49,8 +53,8 @@ const Question = (props) => {
                     shape="circle"
                     icon={<DeleteOutlined />}
                     onClick={(event) => {
-                        if (removeOnClickHandler)
-                            removeOnClickHandler(event, parentKey);
+                        if (handleDeleteQuestion)
+                            handleDeleteQuestion(parentKey);
                     }}
                 />
             }

@@ -3,15 +3,19 @@ import { Button, Checkbox, Tooltip } from "antd";
 import Input from "antd/es/input/Input";
 import { MinusOutlined } from "@ant-design/icons";
 import ErrorMessage from "../ErrorMessage";
+import { GetQuizHandlerContext } from "../../contexts/CreateQuizContexts";
 import "./index.css";
+
 const toolTipText = <span>Is it a answer?</span>;
+
 const Option = (props) => {
-    //on minus button click removeOnclickHander is called
-    //removeOnClickHandler takes two args event , parentKey
-    const { removeOnClickHandler, parentKey } = props;
+    const { data, questionKey } = props;
 
     const [errorMessage, setErrorMessage] = useState("");
     const [optionStatus, setOptionStatus] = useState("");
+    const [option, setOption] = useState(data);
+    const { handleDeleteOption } = GetQuizHandlerContext();
+
     const optionOnChangeHandler = (event) => {
         const {
             target: { value },
@@ -29,6 +33,7 @@ const Option = (props) => {
             <Input
                 placeholder="option"
                 allowClear={true}
+                value={option.text}
                 addonBefore={
                     <Tooltip placement="top" title={toolTipText}>
                         <Checkbox />
@@ -45,7 +50,7 @@ const Option = (props) => {
                         icon={<MinusOutlined />}
                         autoFocus
                         onClick={(event) => {
-                            removeOnClickHandler(event, parentKey);
+                            handleDeleteOption(questionKey, option.id);
                         }}
                     />
                 }

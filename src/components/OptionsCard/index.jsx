@@ -30,7 +30,7 @@ const OptionsCard = (props) => {
     return (
         <div className="optionContainer">
             <Card
-                // title={`Options (${optionList.length})`}
+                title={`Options`}
                 extra={
                     <Button
                         type="primary"

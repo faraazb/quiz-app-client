@@ -1,8 +1,8 @@
-import { createContext, useReducer } from "react";
+import { createContext, useContext, useReducer } from "react";
 import uniqid from "uniqid";
 
 const quizContext = createContext(null);
-const quizFunctionsContext = createContext(null);
+const quizHandlerContext = createContext(null);
 const initialQuizState = {
     title: "",
     description: "",
@@ -13,6 +13,13 @@ const ACTIONS = {
     ADDQUESTION: "addQuestion",
     DELETEQUESTION: "deleteQuestion",
     UPDATEQUESTION: "updateQuestion",
+};
+
+const GetQuizContext = () => {
+    return useContext(quizContext);
+};
+const GetQuizHandlerContext = () => {
+    return useContext(quizHandlerContext);
 };
 
 const quizReducer = (quiz, action) => {
@@ -53,15 +60,25 @@ const QuizProvider = (props) => {
             questionId: questionId,
         });
     };
+    const handleUpdateQuestion = (question) => {
+        dispatch({
+            type: ACTIONS.UPDATEQUESTION,
+            question: question,
+        });
+    };
     return (
         <quizContext.Provider value={{ quiz }}>
-            <quizFunctionsContext.Provider
-                value={{ handleAddQuestion, handleDeleteQuestion }}
+            <quizHandlerContext.Provider
+                value={{
+                    handleAddQuestion,
+                    handleDeleteQuestion,
+                    handleUpdateQuestion,
+                }}
             >
                 {props.children}
-            </quizFunctionsContext.Provider>
+            </quizHandlerContext.Provider>
         </quizContext.Provider>
     );
 };
 
-export { quizContext, quizFunctionsContext, QuizProvider };
+export { GetQuizContext, GetQuizHandlerContext, QuizProvider };

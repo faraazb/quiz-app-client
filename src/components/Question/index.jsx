@@ -5,28 +5,28 @@ import TextArea from "antd/es/input/TextArea";
 
 import ErrorMessage from "../ErrorMessage";
 import OptionsCard from "../OptionsCard";
-import {
-    quizContext,
-    quizFunctionsContext,
-} from "../../contexts/CreateQuizContexts";
+import { GetQuizHandlerContext } from "../../contexts/CreateQuizContexts";
 import "./index.css";
 
 const headingStyle = {
     border: "none",
 };
 const Question = (props) => {
-    const { heading, removeOnClickHandler, parentKey, defaultPoint } = props;
-    const [questionPoint, setQuestionPoint] = useState(defaultPoint || 0);
+    const { heading, data, defaultPoint } = props;
     const [errorMessage, setErrorMessage] = useState("");
     const [titleStatus, setTitleStatus] = useState("");
+    const [question, setQuestion] = useState(data);
     const [cardClass, setCardClass] = useState("questionsCard");
-    const { handleDeleteQuestion } = useContext(quizFunctionsContext);
+    const { handleDeleteQuestion, handleUpdateQuestion } =
+        GetQuizHandlerContext();
     useEffect(() => {
         //add error class to question card if errorMessage is given
         if (errorMessage) setCardClass("questionsCard error");
         else setCardClass("questionsCard");
     }, [errorMessage]);
-
+    useEffect(() => {
+        handleUpdateQuestion(question);
+    }, [question]);
     //title text change handler
     const titleOnChangeHandler = (event) => {
         const {
@@ -40,6 +40,17 @@ const Question = (props) => {
             setTitleStatus("");
             setErrorMessage("");
         }
+        setQuestion((oldQuestion) => {
+            oldQuestion.title = value;
+            return { ...oldQuestion };
+        });
+    };
+
+    const pointOnChangeHandler = (points) => {
+        setQuestion((oldQuestion) => {
+            oldQuestion.points = points;
+            return { ...oldQuestion };
+        });
     };
 
     return (
@@ -54,7 +65,7 @@ const Question = (props) => {
                     icon={<DeleteOutlined />}
                     onClick={(event) => {
                         if (handleDeleteQuestion)
-                            handleDeleteQuestion(parentKey);
+                            handleDeleteQuestion(question.id);
                     }}
                 />
             }
@@ -69,6 +80,7 @@ const Question = (props) => {
                     onChange={titleOnChangeHandler}
                     onBlur={titleOnChangeHandler}
                     status={titleStatus}
+                    value={question.title}
                 />
             </div>
             <div>
@@ -79,15 +91,13 @@ const Question = (props) => {
                     addonBefore=<label>Points</label>
                     type="number"
                     min={0}
-                    value={questionPoint}
-                    onChange={setQuestionPoint}
+                    value={question.points}
+                    onChange={pointOnChangeHandler}
                 />
                 <Button
                     className="button"
                     type="primary"
-                    onClick={() => {
-                        setQuestionPoint(defaultPoint || 0);
-                    }}
+                    onClick={pointOnChangeHandler}
                 >
                     Reset
                 </Button>

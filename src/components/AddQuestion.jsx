@@ -1,25 +1,25 @@
 import { Button } from "antd";
-import { useContext } from "react";
 import {
-    quizContext,
-    quizFunctionsContext,
+    GetQuizContext,
+    GetQuizHandlerContext,
 } from "../contexts/CreateQuizContexts";
 
 import Question from "./Question";
 
 const AddQuestion = () => {
-    const { quiz } = useContext(quizContext);
-    const { handleAddQuestion } = useContext(quizFunctionsContext);
+    const { quiz } = GetQuizContext();
+    const { handleAddQuestion } = GetQuizHandlerContext();
     console.log("Quiz", quiz);
     return (
         <div style={{ margin: "5%" }}>
             <Button onClick={handleAddQuestion}>Add Question</Button>
             <div>
-                {quiz.questions.map((question) => {
+                {quiz.questions.map((question, index) => {
                     return (
                         <div key={question.id}>
                             <Question
-                                parentKey={question.id}
+                                title={`Question ${index + 1}`}
+                                data={question}
                                 defaultPoint={quiz.settings.defaultPoints}
                             />
                         </div>

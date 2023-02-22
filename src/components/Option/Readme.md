@@ -1,19 +1,12 @@
 # Option
 
-This component provides a Option which has 
-- Checkbox
-- Input
-- Minus Button
+This component provides a Option which has
 
-| props | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `removeOnClickHandler` | `callBackfn` | This function is called after onClick on minus button |
-| `parentKey` | `string` | key of parent |
+-   Checkbox
+-   Input
+-   Minus Button
 
-#### removeOnClickHandler(event, parentKey)
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `event`      | `object` | onclick event|
-| `parentKey`      | `string` | parent key |
-
+| props         | Type     | Description        |
+| :------------ | :------- | :----------------- |
+| `questionKey` | `string` | key of question    |
+| `data`        | `object` | option data object |

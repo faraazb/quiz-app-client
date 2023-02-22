@@ -1,27 +1,34 @@
-import { Card, Button, InputNumber } from "antd";
+import { Card, Button, InputNumber, Tooltip } from "antd";
+import { useEffect, useState } from "react";
 import { DeleteOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 
 import ErrorMessage from "../ErrorMessage";
 import OptionsCard from "../OptionsCard";
+import { GetQuizHandlerContext } from "../../contexts/CreateQuizContexts";
 import "./index.css";
-import { useEffect, useState } from "react";
 
 const headingStyle = {
     border: "none",
 };
+const removeToolTipText = "Remove question";
+
 const Question = (props) => {
-    const { heading, removeOnClickHandler, parentKey, defaultPoint } = props;
-    const [questionPoint, setQuestionPoint] = useState(defaultPoint || 0);
+    const { heading, defaultPoints, data } = props;
     const [errorMessage, setErrorMessage] = useState("");
     const [titleStatus, setTitleStatus] = useState("");
+    const [question, setQuestion] = useState(data);
     const [cardClass, setCardClass] = useState("questionsCard");
-
+    const { handleDeleteQuestion, handleUpdateQuestion } =
+        GetQuizHandlerContext();
     useEffect(() => {
         //add error class to question card if errorMessage is given
         if (errorMessage) setCardClass("questionsCard error");
         else setCardClass("questionsCard");
     }, [errorMessage]);
+    useEffect(() => {
+        handleUpdateQuestion(question);
+    }, [question]);
 
     //title text change handler
     const titleOnChangeHandler = (event) => {
@@ -36,6 +43,21 @@ const Question = (props) => {
             setTitleStatus("");
             setErrorMessage("");
         }
+        setQuestion((oldQuestion) => {
+            const newQuestion = structuredClone(oldQuestion);
+            newQuestion.title = value;
+            return newQuestion;
+        });
+    };
+
+    const pointOnChangeHandler = (isReset, points) => {
+        setQuestion((oldQuestion) => {
+            const newQuestion = structuredClone(oldQuestion);
+            if (isReset) newQuestion.isPointDefault = true;
+            else newQuestion.isPointDefault = false;
+            newQuestion.points = points;
+            return newQuestion;
+        });
     };
 
     return (
@@ -44,15 +66,17 @@ const Question = (props) => {
             headStyle={headingStyle}
             className={cardClass}
             extra={
-                <Button
-                    type="primary"
-                    shape="circle"
-                    icon={<DeleteOutlined />}
-                    onClick={(event) => {
-                        if (removeOnClickHandler)
-                            removeOnClickHandler(event, parentKey);
-                    }}
-                />
+                <Tooltip placement="top" title={removeToolTipText}>
+                    <Button
+                        type="primary"
+                        shape="circle"
+                        icon={<DeleteOutlined />}
+                        onClick={(event) => {
+                            if (handleDeleteQuestion)
+                                handleDeleteQuestion(question.id);
+                        }}
+                    />
+                </Tooltip>
             }
         >
             <div className="inputContainer">
@@ -65,6 +89,7 @@ const Question = (props) => {
                     onChange={titleOnChangeHandler}
                     onBlur={titleOnChangeHandler}
                     status={titleStatus}
+                    value={question.title}
                 />
             </div>
             <div>
@@ -75,20 +100,22 @@ const Question = (props) => {
                     addonBefore=<label>Points</label>
                     type="number"
                     min={0}
-                    value={questionPoint}
-                    onChange={setQuestionPoint}
+                    value={question.points}
+                    onChange={(points) => {
+                        pointOnChangeHandler(false, points);
+                    }}
                 />
                 <Button
                     className="button"
                     type="primary"
-                    onClick={() => {
-                        setQuestionPoint(defaultPoint || 0);
+                    onClick={(event) => {
+                        pointOnChangeHandler(true, defaultPoints);
                     }}
                 >
                     Reset
                 </Button>
             </div>
-            <OptionsCard />
+            <OptionsCard parentKey={question.id} />
         </Card>
     );
 };

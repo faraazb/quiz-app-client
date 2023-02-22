@@ -6,7 +6,8 @@ import ErrorMessage from "../ErrorMessage";
 import { GetQuizHandlerContext } from "../../contexts/CreateQuizContexts";
 import "./index.css";
 
-const toolTipText = <span>Is it a answer?</span>;
+const checkboxToolTipText = <span>Is it a answer?</span>;
+const removeToolTipText = <span>Remove option</span>;
 
 const Option = (props) => {
     const { data, questionKey } = props;
@@ -51,7 +52,7 @@ const Option = (props) => {
                 allowClear={true}
                 value={option.text}
                 addonBefore={
-                    <Tooltip placement="top" title={toolTipText}>
+                    <Tooltip placement="top" title={checkboxToolTipText}>
                         <Checkbox onChange={checkboxOnChange} />
                     </Tooltip>
                 }
@@ -60,15 +61,17 @@ const Option = (props) => {
                 onBlur={optionOnChangeHandler}
                 autoFocus
                 addonAfter={
-                    <Button
-                        type="primary"
-                        size="small"
-                        icon={<MinusOutlined />}
-                        autoFocus
-                        onClick={(event) => {
-                            handleDeleteOption(questionKey, option.id);
-                        }}
-                    />
+                    <Tooltip placement="top" title={removeToolTipText}>
+                        <Button
+                            type="primary"
+                            size="small"
+                            icon={<MinusOutlined />}
+                            autoFocus
+                            onClick={(event) => {
+                                handleDeleteOption(questionKey, option.id);
+                            }}
+                        />
+                    </Tooltip>
                 }
             />
             <div>

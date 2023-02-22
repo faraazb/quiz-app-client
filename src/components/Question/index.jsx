@@ -1,4 +1,4 @@
-import { Card, Button, InputNumber } from "antd";
+import { Card, Button, InputNumber, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import { DeleteOutlined } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
@@ -11,8 +11,10 @@ import "./index.css";
 const headingStyle = {
     border: "none",
 };
+const removeToolTipText = "Remove question";
+
 const Question = (props) => {
-    const { heading, data } = props;
+    const { heading, defaultPoint, data } = props;
     const [errorMessage, setErrorMessage] = useState("");
     const [titleStatus, setTitleStatus] = useState("");
     const [question, setQuestion] = useState(data);
@@ -62,15 +64,17 @@ const Question = (props) => {
             headStyle={headingStyle}
             className={cardClass}
             extra={
-                <Button
-                    type="primary"
-                    shape="circle"
-                    icon={<DeleteOutlined />}
-                    onClick={(event) => {
-                        if (handleDeleteQuestion)
-                            handleDeleteQuestion(question.id);
-                    }}
-                />
+                <Tooltip placement="top" title={removeToolTipText}>
+                    <Button
+                        type="primary"
+                        shape="circle"
+                        icon={<DeleteOutlined />}
+                        onClick={(event) => {
+                            if (handleDeleteQuestion)
+                                handleDeleteQuestion(question.id);
+                        }}
+                    />
+                </Tooltip>
             }
         >
             <div className="inputContainer">
@@ -102,8 +106,8 @@ const Question = (props) => {
                 <Button
                     className="button"
                     type="primary"
-                    onClick={(points) => {
-                        pointOnChangeHandler(true, points);
+                    onClick={(event) => {
+                        pointOnChangeHandler(true, defaultPoint);
                     }}
                 >
                     Reset

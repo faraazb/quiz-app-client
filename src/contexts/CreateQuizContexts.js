@@ -39,6 +39,11 @@ const quizReducer = (quiz, action) => {
             return { ...quiz };
         case ACTIONS.SETQUIZSETTINGS:
             quiz.settings = action.settings;
+            quiz.questions.forEach((question) => {
+                if (question.isPointDefault) {
+                    question.points = quiz.settings.defaultPoints;
+                }
+            });
             return { ...quiz };
         case ACTIONS.ADDQUESTION:
             quiz.questions.push(action.question);
@@ -104,6 +109,7 @@ const QuizProvider = (props) => {
             id: questionId,
             title: "",
             points: quiz.settings.defaultPoints,
+            isPointDefault: true,
             options: [],
         };
         dispatch({ type: ACTIONS.ADDQUESTION, question: question });

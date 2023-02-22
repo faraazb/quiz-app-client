@@ -27,7 +27,7 @@ const Question = (props) => {
     useEffect(() => {
         handleUpdateQuestion(question);
     }, [question]);
-   
+
     //title text change handler
     const titleOnChangeHandler = (event) => {
         const {
@@ -47,8 +47,10 @@ const Question = (props) => {
         });
     };
 
-    const pointOnChangeHandler = (points) => {
+    const pointOnChangeHandler = (isReset, points) => {
         setQuestion((oldQuestion) => {
+            if (isReset) oldQuestion.isPointDefault = true;
+            else oldQuestion.isPointDefault = false;
             oldQuestion.points = points;
             return { ...oldQuestion };
         });
@@ -93,12 +95,16 @@ const Question = (props) => {
                     type="number"
                     min={0}
                     value={question.points}
-                    onChange={pointOnChangeHandler}
+                    onChange={(points) => {
+                        pointOnChangeHandler(false, points);
+                    }}
                 />
                 <Button
                     className="button"
                     type="primary"
-                    onClick={pointOnChangeHandler}
+                    onClick={(points) => {
+                        pointOnChangeHandler(true, points);
+                    }}
                 >
                     Reset
                 </Button>

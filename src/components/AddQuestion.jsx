@@ -18,7 +18,7 @@ const AddQuestion = () => {
                     return (
                         <div key={question.id}>
                             <Question
-                                title={`Question ${index + 1}`}
+                                heading={`Question ${index + 1}`}
                                 data={question}
                             />
                         </div>

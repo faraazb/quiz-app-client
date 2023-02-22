@@ -32,8 +32,9 @@ const Option = (props) => {
             setErrorMessage("");
         }
         setOption((oldOption) => {
-            oldOption.text = value;
-            return { ...oldOption };
+            const newOption = structuredClone(oldOption);
+            newOption.text = value;
+            return newOption;
         });
     };
     const checkboxOnChange = (event) => {
@@ -41,8 +42,9 @@ const Option = (props) => {
             target: { checked },
         } = event;
         setOption((oldOption) => {
-            oldOption.isCorrect = checked;
-            return { ...oldOption };
+            const newOption = structuredClone(oldOption);
+            newOption.isCorrect = checked;
+            return newOption;
         });
     };
     return (

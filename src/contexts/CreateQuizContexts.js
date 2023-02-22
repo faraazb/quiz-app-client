@@ -30,65 +30,66 @@ const GetQuizHandlerContext = () => {
 
 const quizReducer = (quiz, action) => {
     let result, question;
+    const newQuiz = structuredClone(quiz);
     switch (action.type) {
         case ACTIONS.SETQUIZTITLE:
-            quiz.title = action.title;
-            return { ...quiz };
+            newQuiz.title = action.title;
+            return newQuiz;
         case ACTIONS.SETQUIZDESC:
-            quiz.description = action.description;
-            return { ...quiz };
+            newQuiz.description = action.description;
+            return newQuiz;
         case ACTIONS.SETQUIZSETTINGS:
-            quiz.settings = action.settings;
-            quiz.questions.forEach((question) => {
+            newQuiz.settings = action.settings;
+            newQuiz.questions.forEach((question) => {
                 if (question.isPointDefault) {
                     question.points = quiz.settings.defaultPoints;
                 }
             });
-            return { ...quiz };
+            return newQuiz;
         case ACTIONS.ADDQUESTION:
-            quiz.questions.push(action.question);
-            return { ...quiz };
+            newQuiz.questions.push(action.question);
+            return newQuiz;
         case ACTIONS.DELETEQUESTION:
-            quiz.questions = quiz.questions.filter(
+            newQuiz.questions = quiz.questions.filter(
                 (question) => question.id !== action.questionId
             );
-            return { ...quiz };
+            return newQuiz;
         case ACTIONS.UPDATEQUESTION:
-            const index = quiz.questions.findIndex(
+            const index = newQuiz.questions.findIndex(
                 (question) => question.id === action.question.id
             );
-            if (index === -1) return quiz;
-            quiz.questions[index] = action.question;
-            return { ...quiz };
+            if (index === -1) return newQuiz;
+            newQuiz.questions[index] = action.question;
+            return newQuiz;
         case ACTIONS.ADDOPTION:
-            question = quiz.questions.find(
+            question = newQuiz.questions.find(
                 (question) => question.id === action.questionId
             );
-            if (!question) return quiz;
+            if (!question) return newQuiz;
             question.options.push(action.option);
-            return { ...quiz };
+            return newQuiz;
         case ACTIONS.DELETEOPTION:
-            result = quiz.questions.find(
+            result = newQuiz.questions.find(
                 (question) => question.id === action.questionId
             );
-            if (!result) return quiz;
+            if (!result) return newQuiz;
             result.options = result.options.filter(
                 (option) => option.id !== action.optionId
             );
-            return { ...quiz };
+            return newQuiz;
         case ACTIONS.UPDATEOPTION:
-            question = quiz.questions.find(
+            question = newQuiz.questions.find(
                 (question) => question.id === action.questionId
             );
-            if (!question) return quiz;
+            if (!question) return newQuiz;
             result = question.options.findIndex(
                 (option) => option.id === action.option.id
             );
-            if (result === -1) return quiz;
+            if (result === -1) return newQuiz;
             question.options[result] = action.option;
-            return { ...quiz };
+            return newQuiz;
         default:
-            return quiz;
+            return newQuiz;
     }
 };
 

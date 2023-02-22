@@ -14,7 +14,7 @@ const headingStyle = {
 const removeToolTipText = "Remove question";
 
 const Question = (props) => {
-    const { heading, defaultPoint, data } = props;
+    const { heading, defaultPoints, data } = props;
     const [errorMessage, setErrorMessage] = useState("");
     const [titleStatus, setTitleStatus] = useState("");
     const [question, setQuestion] = useState(data);
@@ -44,17 +44,19 @@ const Question = (props) => {
             setErrorMessage("");
         }
         setQuestion((oldQuestion) => {
-            oldQuestion.title = value;
-            return { ...oldQuestion };
+            const newQuestion = structuredClone(oldQuestion);
+            newQuestion.title = value;
+            return newQuestion;
         });
     };
 
     const pointOnChangeHandler = (isReset, points) => {
         setQuestion((oldQuestion) => {
-            if (isReset) oldQuestion.isPointDefault = true;
-            else oldQuestion.isPointDefault = false;
-            oldQuestion.points = points;
-            return { ...oldQuestion };
+            const newQuestion = structuredClone(oldQuestion);
+            if (isReset) newQuestion.isPointDefault = true;
+            else newQuestion.isPointDefault = false;
+            newQuestion.points = points;
+            return newQuestion;
         });
     };
 
@@ -107,7 +109,7 @@ const Question = (props) => {
                     className="button"
                     type="primary"
                     onClick={(event) => {
-                        pointOnChangeHandler(true, defaultPoint);
+                        pointOnChangeHandler(true, defaultPoints);
                     }}
                 >
                     Reset

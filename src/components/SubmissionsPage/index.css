@@ -1,0 +1,22 @@
+#quiz-submissions {
+    height: 100%;
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.page {
+    width: 90%;
+    max-width: 750px;
+}
+
+.submissions-summary {
+    display: flex;
+    flex-direction: column;
+}
+
+.submissions-statistics {
+    display: flex;
+    column-gap: 5rem;
+}

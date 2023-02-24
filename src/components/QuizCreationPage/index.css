@@ -1,0 +1,13 @@
+.quizCreationPage {
+    margin-top: 1em;
+    padding-left: 3em;
+    padding-right: 3em;
+    padding-bottom: 3em;
+}
+.h2 {
+    margin-top: 2em;
+}
+
+.quizCreationPage .submit {
+    margin-left: 3em;
+}

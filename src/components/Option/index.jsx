@@ -64,14 +64,12 @@ const Option = (props) => {
                 status={optionStatus}
                 onChange={optionOnChangeHandler}
                 onBlur={optionOnChangeHandler}
-                autoFocus
                 addonAfter={
                     <Tooltip placement="top" title={removeToolTipText}>
                         <Button
                             type="primary"
                             size="small"
                             icon={<MinusOutlined />}
-                            autoFocus
                             onClick={(event) => {
                                 handleDeleteOption(questionKey, option._id);
                             }}

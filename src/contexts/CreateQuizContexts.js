@@ -10,6 +10,7 @@ const initialQuizState = {
     settings: { defaultPoints: 0 },
     questions: [],
 };
+
 const ACTIONS = {
     SETQUIZ: "setQuiz",
     SETQUIZTITLE: "setQuizTitle",
@@ -40,7 +41,9 @@ const quizReducer = (quiz, action) => {
             newQuiz.description = description;
             newQuiz.settings = settings;
             newQuiz.questions = questions.map((question) => {
-                question.isPointDefault = false;
+                if (settings.defaultPoints === question.points)
+                    question.isPointDefault = true;
+                else question.isPointDefault = false;
                 return question;
             });
             return newQuiz;
@@ -88,6 +91,9 @@ const quizReducer = (quiz, action) => {
                 (question) => question._id === action.questionId
             );
             if (!result) return newQuiz;
+            if (result.options.length === 2) {
+                return newQuiz;
+            }
             result.options = result.options.filter(
                 (option) => option._id !== action.optionId
             );
@@ -132,6 +138,8 @@ const QuizProvider = (props) => {
             options: [],
         };
         dispatch({ type: ACTIONS.ADDQUESTION, question: question });
+        handleAddOption(questionId);
+        handleAddOption(questionId);
     };
     const handleDeleteQuestion = (questionId) => {
         dispatch({

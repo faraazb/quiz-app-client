@@ -1,33 +1,87 @@
 import { React, useState, useEffect } from 'react';
-import { Button, Form, Input, InputNumber } from 'antd';
+import { Button, Form, Input, InputNumber, Modal } from 'antd';
 import { Tabs } from 'antd';
+import axios from 'axios';
 import { GetQuizContext, GetQuizHandlerContext } from '../../contexts/CreateQuizContexts';
 import Question from "../Question";
 
 import './index.css'
-
+const url = "http://localhost:5000/quizzes"
 const QuizCreationPage = () => {
     const { quiz } = GetQuizContext()
     const { handleAddQuestion, handleQuizTitle, handleQuizDescription, handleQuizSettings } = GetQuizHandlerContext()
     const [settings, setSettings] = useState(quiz.settings);
-    const [title, setTitle] = useState([]);
-    const [description, setDescription] = useState([])
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("")
+
     useEffect(() => {
         handleQuizSettings(settings);
     }, [settings]);
-    console.log("Quiz", quiz);
     useEffect(() => {
         handleQuizTitle(title)
     }, [title]);
     useEffect(() => {
         handleQuizDescription(description)
     }, [description]);
-    const handleSave = (event) => {
-        event.preventDefault();
-        const {
-            target: { },
-        } = event;
-        console.log("saved", title);
+
+    const validate = () => {
+        if (quiz.title === "") {
+            Modal.error({
+                title: 'Title !!!',
+                content: 'Quiz title is required',
+            });
+            return
+        }
+        // else if (quiz.description === "") {
+        //     Modal.error({
+        //         title: 'Description !!!',
+        //         content: 'Quiz description is required',
+        //     });
+        //     return
+        // }
+        quiz.questions.forEach((question) => {
+            if (question.text === "") {
+                Modal.error({
+                    title: 'Quesstion title !!!',
+                    content: 'Question title required',
+                });
+                return
+            }
+            let correctOptions = question.options.filter((option) => {
+                return option.isCorrect
+            })
+            if (correctOptions.length === 0) {
+                Modal.error({
+                    title: 'Correct option !!!',
+                    content: 'Select at least 1 correct option',
+                });
+                return
+            }
+            let ot=question.options.filter((o)=>{
+                return o.text
+            })
+            if (ot.length === 0) {
+                Modal.error({
+                    title: 'Option text !!!',
+                    content: 'Enter option text',
+                });
+                return
+            }
+            Modal.success({
+                content: 'Saved the quiz',
+            });
+        })
+    }
+    const handleSave = async (event) => {
+        validate();
+        const quizCopy = structuredClone(quiz);
+        quizCopy.questions.forEach((question) => {
+            let correctOptions = question.options.filter((option) => {
+                return option.isCorrect
+            })
+            question.type = correctOptions.length > 1 ? "multiple_ans" : "single_ans";
+        })
+        const response = await axios.post(url, quizCopy);
     };
     return (
         <div className='quizCreationPage'>
@@ -81,7 +135,7 @@ const QuizCreationPage = () => {
                         <Button type='primary' onClick={handleAddQuestion}>
                             Add Question
                         </Button>
-                        <Button className='submit' type="primary" htmlType='submit'>
+                        <Button className='submit' type="primary" htmlType='submit' onClick={handleSave}>
                             Save
                         </Button>
                     </Form>

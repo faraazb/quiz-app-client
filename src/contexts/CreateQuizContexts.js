@@ -4,7 +4,7 @@ import uniqid from "uniqid";
 const quizContext = createContext(null);
 const quizHandlerContext = createContext(null);
 const initialQuizState = {
-    title: "",
+    text: "",
     description: "",
     settings: { defaultPoints: 0 },
     questions: [],

@@ -73,7 +73,7 @@ const Option = (props) => {
                             icon={<MinusOutlined />}
                             autoFocus
                             onClick={(event) => {
-                                handleDeleteOption(questionKey, option.id);
+                                handleDeleteOption(questionKey, option._id);
                             }}
                         />
                     </Tooltip>

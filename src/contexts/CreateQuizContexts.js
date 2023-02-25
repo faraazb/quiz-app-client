@@ -4,7 +4,7 @@ import uniqid from "uniqid";
 const quizContext = createContext(null);
 const quizHandlerContext = createContext(null);
 const initialQuizState = {
-    id: null,
+    _id: null,
     title: "",
     description: "",
     settings: { defaultPoints: 0 },
@@ -34,9 +34,8 @@ const quizReducer = (quiz, action) => {
     const newQuiz = structuredClone(quiz);
     switch (action.type) {
         case ACTIONS.SETQUIZ:
-            const { _id, title, description, settings, questions } =
-                action.quiz;
-            newQuiz.id = _id;
+            let { _id, title, description, settings, questions } = action.quiz;
+            newQuiz._id = _id;
             newQuiz.title = title;
             newQuiz.description = description;
             newQuiz.settings = settings;
@@ -64,39 +63,42 @@ const quizReducer = (quiz, action) => {
             return newQuiz;
         case ACTIONS.DELETEQUESTION:
             newQuiz.questions = quiz.questions.filter(
-                (question) => question.id !== action.questionId
+                (question) => question._id !== action.questionId
             );
             return newQuiz;
         case ACTIONS.UPDATEQUESTION:
-            const index = newQuiz.questions.findIndex(
-                (question) => question.id === action.question.id
+            question = newQuiz.questions.find(
+                (question) => question._id === action.question._id
             );
-            if (index === -1) return newQuiz;
-            newQuiz.questions[index] = action.question;
+            if (!question) return newQuiz;
+            let { text, isPointDefault, points } = action.question;
+            question.text = text;
+            question.isPointDefault = isPointDefault;
+            question.points = points;
             return newQuiz;
         case ACTIONS.ADDOPTION:
             question = newQuiz.questions.find(
-                (question) => question.id === action.questionId
+                (question) => question._id === action.questionId
             );
             if (!question) return newQuiz;
             question.options.push(action.option);
             return newQuiz;
         case ACTIONS.DELETEOPTION:
             result = newQuiz.questions.find(
-                (question) => question.id === action.questionId
+                (question) => question._id === action.questionId
             );
             if (!result) return newQuiz;
             result.options = result.options.filter(
-                (option) => option.id !== action.optionId
+                (option) => option._id !== action.optionId
             );
             return newQuiz;
         case ACTIONS.UPDATEOPTION:
             question = newQuiz.questions.find(
-                (question) => question.id === action.questionId
+                (question) => question._id === action.questionId
             );
             if (!question) return newQuiz;
             result = question.options.findIndex(
-                (option) => option.id === action.option.id
+                (option) => option._id === action.option._id
             );
             if (result === -1) return newQuiz;
             question.options[result] = action.option;
@@ -123,8 +125,8 @@ const QuizProvider = (props) => {
     const handleAddQuestion = () => {
         const questionId = uniqid();
         const question = {
-            id: questionId,
-            title: "",
+            _id: questionId,
+            text: "",
             points: quiz.settings.defaultPoints,
             isPointDefault: true,
             options: [],
@@ -145,7 +147,7 @@ const QuizProvider = (props) => {
     };
     const handleAddOption = (questionId) => {
         const option = {
-            id: uniqid(),
+            _id: uniqid(),
             isCorrect: false,
             text: "",
         };

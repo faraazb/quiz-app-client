@@ -1,0 +1,52 @@
+.navigation-container {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(255, 255, 255);
+    margin: 1% 2%;
+    box-shadow: 0 1px 5px 1px rgb(96, 96, 96);
+    overflow: scroll;
+    height: 80vh;
+    border-radius: 10px;
+}
+.progress-bar-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+    position: relative;
+    top: -9px;
+    left: 4px;
+    width: 100%;
+}
+.progress-stats-container {
+    margin: 1% 4%;
+
+    font-weight: 300;
+}
+.title {
+    font-size: x-large;
+    margin: 1% 0;
+}
+.green {
+    color: rgb(2, 193, 2);
+}
+.gray {
+    color: gray;
+}
+
+.yellow {
+    color: rgb(197, 197, 0);
+}
+
+.navigation {
+    margin: 20px 4%;
+    display: flex;
+    justify-content: center;
+}
+.bottom-bar {
+    width: 100%;
+    color: aliceblue;
+    align-self: flex-end;
+    display: flex;
+    justify-content: center;
+}

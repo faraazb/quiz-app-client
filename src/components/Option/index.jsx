@@ -55,7 +55,10 @@ const Option = (props) => {
                 value={option.text}
                 addonBefore={
                     <Tooltip placement="top" title={checkboxToolTipText}>
-                        <Checkbox onChange={checkboxOnChange} />
+                        <Checkbox
+                            onChange={checkboxOnChange}
+                            checked={option.isCorrect}
+                        />
                     </Tooltip>
                 }
                 status={optionStatus}

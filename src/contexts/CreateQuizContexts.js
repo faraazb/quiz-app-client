@@ -4,12 +4,14 @@ import uniqid from "uniqid";
 const quizContext = createContext(null);
 const quizHandlerContext = createContext(null);
 const initialQuizState = {
+    id: null,
     title: "",
     description: "",
     settings: { defaultPoints: 0 },
     questions: [],
 };
 const ACTIONS = {
+    SETQUIZ: "setQuiz",
     SETQUIZTITLE: "setQuizTitle",
     SETQUIZDESC: "setQuizDesc",
     SETQUIZSETTINGS: "setQuizSettings",
@@ -27,11 +29,22 @@ const GetQuizContext = () => {
 const GetQuizHandlerContext = () => {
     return useContext(quizHandlerContext);
 };
-
 const quizReducer = (quiz, action) => {
     let result, question;
     const newQuiz = structuredClone(quiz);
     switch (action.type) {
+        case ACTIONS.SETQUIZ:
+            const { _id, title, description, settings, questions } =
+                action.quiz;
+            newQuiz.id = _id;
+            newQuiz.title = title;
+            newQuiz.description = description;
+            newQuiz.settings = settings;
+            newQuiz.questions = questions.map((question) => {
+                question.isPointDefault = false;
+                return question;
+            });
+            return newQuiz;
         case ACTIONS.SETQUIZTITLE:
             newQuiz.title = action.title;
             return newQuiz;
@@ -95,6 +108,9 @@ const quizReducer = (quiz, action) => {
 
 const QuizProvider = (props) => {
     const [quiz, dispatch] = useReducer(quizReducer, initialQuizState);
+    const handleSetQuiz = (newQuiz) => {
+        dispatch({ type: ACTIONS.SETQUIZ, quiz: newQuiz });
+    };
     const handleQuizTitle = (title) => {
         dispatch({ type: ACTIONS.SETQUIZTITLE, title });
     };
@@ -157,6 +173,7 @@ const QuizProvider = (props) => {
         <quizContext.Provider value={{ quiz }}>
             <quizHandlerContext.Provider
                 value={{
+                    handleSetQuiz,
                     handleQuizTitle,
                     handleQuizDescription,
                     handleQuizSettings,

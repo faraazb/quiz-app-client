@@ -1,10 +1,12 @@
 import Header from "./Header/Header";
 import DashboardPage from "./DashboardPage";
 import StartQuizPage from "./StartQuizPage";
+import ResultPage from "./ResultPage";
 
 
 export {
     Header,
     DashboardPage,
-    StartQuizPage
+    StartQuizPage,
+    ResultPage,
 };

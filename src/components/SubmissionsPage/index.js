@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { Statistic, Table, Tabs, message } from "antd";
+import { useParams } from "react-router-dom";
+import { Statistic, Table, Tabs, Typography, message } from "antd";
 import {
     BarChartOutlined,
     CrownOutlined,
@@ -8,6 +8,9 @@ import {
 } from "@ant-design/icons";
 import "./index.css";
 import { getSubmissions } from "../../api";
+
+
+const { Title, Paragraph } = Typography;
 
 const SubmissionsSummary = ({ data }) => {
     return (
@@ -41,9 +44,12 @@ const SubmissionsTable = ({ data, columns, loading }) => {
             <Table
                 dataSource={data}
                 columns={columns}
-                rowKey={(record) => record._id}
+                rowKey={(record) => record.user._id}
                 loading={loading}
                 pagination={false}
+                scroll={{
+                    y: 450,
+                }}
             />
         </div>
     );
@@ -53,6 +59,7 @@ const SubmissionsPage = () => {
     const { quizId } = useParams();
     const [messageApi, contextHolder] = message.useMessage();
     const [loading, setLoading] = useState(true);
+    const [quiz, setQuiz] = useState();
     const [submissions, setSubmissions] = useState([]);
     const [report, setReport] = useState();
 
@@ -63,19 +70,16 @@ const SubmissionsPage = () => {
             key: "username",
         },
         {
-            title: "Score",
+            title: (quiz && `Score (Out of ${quiz.totalPoints})`) || "Score",
             dataIndex: "score",
             key: "score",
             sorter: (a, b) => a.score - b.score,
         },
         {
-            title: "",
-            key: "view",
-            render: (_, record) => (
-                <Link to={`/quiz/${quizId}/submissions/${record._id}`}>
-                    View
-                </Link>
-            ),
+            title: "Correctly Answered",
+            dataIndex: "correctlyAnsweredCount",
+            key: "correctlyAnsweredCount",
+            sorter: (a, b) => a.correctlyAnsweredCount - b.correctlyAnsweredCount,
         },
     ];
 
@@ -83,6 +87,7 @@ const SubmissionsPage = () => {
         (async function () {
             try {
                 const data = await getSubmissions(quizId);
+                setQuiz(data.quiz)
                 setSubmissions(data.submissions);
                 setReport(data.report);
             } catch (err) {
@@ -94,13 +99,19 @@ const SubmissionsPage = () => {
                 setLoading(false);
             }
         })();
-    }, []);
+    }, [quizId]);
 
     return (
         <section id="quiz-submissions">
             {contextHolder}
             <div className="page">
                 <div>
+                    {quiz && (
+                        <div>
+                            <Title level={2}>{quiz.title}</Title>
+                            <Paragraph>{quiz.description}</Paragraph>
+                        </div>
+                    )}
                     <Tabs
                         defaultActiveKey="1"
                         items={[

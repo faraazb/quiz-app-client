@@ -5,7 +5,7 @@
     margin: 1% 2%;
     box-shadow: 0 1px 5px 1px rgb(96, 96, 96);
     overflow: scroll;
-    height: 80vh;
+    height: auto;
     border-radius: 10px;
 }
 .progress-bar-container {
@@ -47,10 +47,10 @@
     color: rgb(197, 0, 0);
 }
 .yellow-bg {
-    color:  rgb(197, 0, 0);
+    background-color: rgb(255, 123, 123);
 }
 .blue-bg {
-    background-color:  rgb(71, 130, 248);
+    background-color: rgb(71, 130, 248);
 }
 
 .navigation {
@@ -59,8 +59,9 @@
     justify-content: center;
 }
 .bottom-bar {
+    margin: 5px 0;
+    padding: 2px;
     width: 100%;
-    color: aliceblue;
     align-self: flex-end;
     display: flex;
     justify-content: center;

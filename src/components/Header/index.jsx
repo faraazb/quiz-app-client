@@ -1,10 +1,10 @@
-import styles from "./header.module.css";
+import "./index.css";
 
 export default function Header(props) {
 
     return (
         <header>
-            <div className={styles.logo}>
+            <div className="logo">
                 Quiz
             </div>
         </header>

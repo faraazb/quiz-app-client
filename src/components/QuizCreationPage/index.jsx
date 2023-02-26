@@ -32,20 +32,14 @@ const QuizCreationPage = () => {
             });
             return
         }
-        // else if (quiz.description === "") {
-        //     Modal.error({
-        //         title: 'Description !!!',
-        //         content: 'Quiz description is required',
-        //     });
-        //     return
-        // }
-        quiz.questions.forEach((question) => {
+        for (let i = 0; i < quiz.questions.length; i++) {
+            const question = quiz.questions[i];
             if (question.text === "") {
                 Modal.error({
-                    title: 'Quesstion title !!!',
+                    title: 'Question title !!!',
                     content: 'Question title required',
                 });
-                return
+                return false;
             }
             let correctOptions = question.options.filter((option) => {
                 return option.isCorrect
@@ -57,10 +51,10 @@ const QuizCreationPage = () => {
                 });
                 return
             }
-            let ot=question.options.filter((o)=>{
-                return o.text
+            let optionText = question.options.filter((optTxt) => {
+                return optTxt.text
             })
-            if (ot.length === 0) {
+            if (optionText.length === 0) {
                 Modal.error({
                     title: 'Option text !!!',
                     content: 'Enter option text',
@@ -70,10 +64,12 @@ const QuizCreationPage = () => {
             Modal.success({
                 content: 'Saved the quiz',
             });
-        })
+        }
+
     }
     const handleSave = async (event) => {
-        validate();
+        const isValid = validate();
+        if (!isValid) return;
         const quizCopy = structuredClone(quiz);
         quizCopy.questions.forEach((question) => {
             let correctOptions = question.options.filter((option) => {
@@ -105,13 +101,10 @@ const QuizCreationPage = () => {
                         </Form.Item>
                         <h2>Description</h2>
                         <Form.Item
-                            name="description"
-                            rules={[{
-                                required: true,
-                                message: 'Please enter the valid Quiz description!',
-                            }]}>
+                            name="description">
                             <Input
-                                size='large'
+                                className='description'
+                                size="large"
                                 value={description}
                                 onChange={(d) => {
                                     setDescription(d.target.value)

@@ -1,9 +1,8 @@
-import React from 'react';
-import { Button, Form, Input } from 'antd';
-
+import { Button, Form, Input } from 'antd'
 import  './index.css';
 
-const StartQuizPage = () => {
+const StartQuizPage = ({startQuiz}) => {
+
     return (
         <div className="startQuizPage" >
             <Form id='form'>
@@ -18,7 +17,7 @@ const StartQuizPage = () => {
                 </Form.Item>
 
                 <Form.Item className='button'>
-                    <Button type="primary" htmlType="submit" /*href={quiz}*/>
+                    <Button type="primary" htmlType="submit" onClick={() => startQuiz("faraaz")}>
                         Start Quiz
                     </Button>
                 </Form.Item>

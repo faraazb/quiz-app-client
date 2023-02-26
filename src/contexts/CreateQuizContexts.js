@@ -4,12 +4,15 @@ import uniqid from "uniqid";
 const quizContext = createContext(null);
 const quizHandlerContext = createContext(null);
 const initialQuizState = {
-    text: "",
+    _id: null,
+    title: "",
     description: "",
     settings: { defaultPoints: 0 },
     questions: [],
 };
+
 const ACTIONS = {
+    SETQUIZ: "setQuiz",
     SETQUIZTITLE: "setQuizTitle",
     SETQUIZDESC: "setQuizDesc",
     SETQUIZSETTINGS: "setQuizSettings",
@@ -27,11 +30,23 @@ const GetQuizContext = () => {
 const GetQuizHandlerContext = () => {
     return useContext(quizHandlerContext);
 };
-
 const quizReducer = (quiz, action) => {
     let result, question;
     const newQuiz = structuredClone(quiz);
     switch (action.type) {
+        case ACTIONS.SETQUIZ:
+            let { _id, title, description, settings, questions } = action.quiz;
+            newQuiz._id = _id;
+            newQuiz.title = title;
+            newQuiz.description = description;
+            newQuiz.settings = settings;
+            newQuiz.questions = questions.map((question) => {
+                if (settings.defaultPoints === question.points)
+                    question.isPointDefault = true;
+                else question.isPointDefault = false;
+                return question;
+            });
+            return newQuiz;
         case ACTIONS.SETQUIZTITLE:
             newQuiz.title = action.title;
             return newQuiz;
@@ -51,39 +66,45 @@ const quizReducer = (quiz, action) => {
             return newQuiz;
         case ACTIONS.DELETEQUESTION:
             newQuiz.questions = quiz.questions.filter(
-                (question) => question.id !== action.questionId
+                (question) => question._id !== action.questionId
             );
             return newQuiz;
         case ACTIONS.UPDATEQUESTION:
-            const index = newQuiz.questions.findIndex(
-                (question) => question.id === action.question.id
+            question = newQuiz.questions.find(
+                (question) => question._id === action.question._id
             );
-            if (index === -1) return newQuiz;
-            newQuiz.questions[index] = action.question;
+            if (!question) return newQuiz;
+            let { text, isPointDefault, points } = action.question;
+            question.text = text;
+            question.isPointDefault = isPointDefault;
+            question.points = points;
             return newQuiz;
         case ACTIONS.ADDOPTION:
             question = newQuiz.questions.find(
-                (question) => question.id === action.questionId
+                (question) => question._id === action.questionId
             );
             if (!question) return newQuiz;
             question.options.push(action.option);
             return newQuiz;
         case ACTIONS.DELETEOPTION:
             result = newQuiz.questions.find(
-                (question) => question.id === action.questionId
+                (question) => question._id === action.questionId
             );
             if (!result) return newQuiz;
+            if (result.options.length === 2) {
+                return newQuiz;
+            }
             result.options = result.options.filter(
-                (option) => option.id !== action.optionId
+                (option) => option._id !== action.optionId
             );
             return newQuiz;
         case ACTIONS.UPDATEOPTION:
             question = newQuiz.questions.find(
-                (question) => question.id === action.questionId
+                (question) => question._id === action.questionId
             );
             if (!question) return newQuiz;
             result = question.options.findIndex(
-                (option) => option.id === action.option.id
+                (option) => option._id === action.option._id
             );
             if (result === -1) return newQuiz;
             question.options[result] = action.option;
@@ -95,6 +116,9 @@ const quizReducer = (quiz, action) => {
 
 const QuizProvider = (props) => {
     const [quiz, dispatch] = useReducer(quizReducer, initialQuizState);
+    const handleSetQuiz = (newQuiz) => {
+        dispatch({ type: ACTIONS.SETQUIZ, quiz: newQuiz });
+    };
     const handleQuizTitle = (title) => {
         dispatch({ type: ACTIONS.SETQUIZTITLE, title });
     };
@@ -107,13 +131,15 @@ const QuizProvider = (props) => {
     const handleAddQuestion = () => {
         const questionId = uniqid();
         const question = {
-            id: questionId,
-            title: "",
+            _id: questionId,
+            text: "",
             points: quiz.settings.defaultPoints,
             isPointDefault: true,
             options: [],
         };
         dispatch({ type: ACTIONS.ADDQUESTION, question: question });
+        handleAddOption(questionId);
+        handleAddOption(questionId);
     };
     const handleDeleteQuestion = (questionId) => {
         dispatch({
@@ -129,7 +155,7 @@ const QuizProvider = (props) => {
     };
     const handleAddOption = (questionId) => {
         const option = {
-            id: uniqid(),
+            _id: uniqid(),
             isCorrect: false,
             text: "",
         };
@@ -157,6 +183,7 @@ const QuizProvider = (props) => {
         <quizContext.Provider value={{ quiz }}>
             <quizHandlerContext.Provider
                 value={{
+                    handleSetQuiz,
                     handleQuizTitle,
                     handleQuizDescription,
                     handleQuizSettings,

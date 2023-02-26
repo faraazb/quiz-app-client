@@ -30,7 +30,7 @@ const QuizCreationPage = () => {
                 title: 'Title !!!',
                 content: 'Quiz title is required',
             });
-            return
+            return true
         }
         for (let i = 0; i < quiz.questions.length; i++) {
             const question = quiz.questions[i];
@@ -44,13 +44,6 @@ const QuizCreationPage = () => {
             let correctOptions = question.options.filter((option) => {
                 return option.isCorrect
             })
-            if (correctOptions.length === 0) {
-                Modal.error({
-                    title: 'Correct option !!!',
-                    content: 'Select at least 1 correct option',
-                });
-                return
-            }
             let optionText = question.options.filter((optTxt) => {
                 return optTxt.text
             })
@@ -59,13 +52,20 @@ const QuizCreationPage = () => {
                     title: 'Option text !!!',
                     content: 'Enter option text',
                 });
-                return
+                return false
             }
+            if (correctOptions.length === 0) {
+                Modal.error({
+                    title: 'Correct option !!!',
+                    content: 'Select at least 1 correct option',
+                });
+                return false
+            }
+            return true
             Modal.success({
                 content: 'Saved the quiz',
             });
         }
-
     }
     const handleSave = async (event) => {
         const isValid = validate();
@@ -77,7 +77,7 @@ const QuizCreationPage = () => {
             })
             question.type = correctOptions.length > 1 ? "multiple_ans" : "single_ans";
         })
-        const response = await axios.post(url, quizCopy);
+        const response = await axios.post(url, quizCopy);  
     };
     return (
         <div className='quizCreationPage'>

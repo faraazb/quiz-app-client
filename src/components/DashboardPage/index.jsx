@@ -58,7 +58,7 @@ const DashboardPage = () => {
         // console.log('Received values of form: ', values);
         const response = await axios.post('http://localhost:5000/quizzes', values);
         // console.log(response.data.data.id);
-        navigate(`http://localhost:5000/quiz/${response.data.data.id}/edit`, { replace: true });
+        navigate(`/quiz/${response.data.data.id}/edit`, { replace: true });
         setOpen(false);
     };
     const getQuizzes = async () => {
@@ -92,30 +92,31 @@ const DashboardPage = () => {
                 {quizzes !== null && quizzes.data.data.map((quiz) => {
                     return (
                         <Col key={quiz.id}>
-                            <Link to={`http://localhost:3000/quiz/${quiz.id}/submissions`}>
-                                <Card size="small"
-                                    className="card"
-                                    style={{ width: 250 }}
-                                    actions={[
-                                        <CopyOutlined key="copy" onClick={() => {
-                                            navigator.clipboard.writeText(`http://localhost:3000/quiz/${quiz.id}`);
-                                            messageApi.open({
-                                                type: 'success',
-                                                content: 'Quiz Link Copied',
-                                            });
-                                        }} />,
-                                        <Link to={`http://localhost:3000/quiz/${quiz.id}/edit`}>
-                                            <EditOutlined key="edit" />
-                                        </Link>
-                                    ]}
-                                >
-                                    {contextHolder}
+
+                            <Card size="small"
+                                className="card"
+                                style={{ width: 250 }}
+                                actions={[
+                                    <CopyOutlined key="copy" onClick={() => {
+                                        navigator.clipboard.writeText(`http://localhost:3000/quiz/${quiz.id}`);
+                                        messageApi.open({
+                                            type: 'success',
+                                            content: 'Quiz Link Copied',
+                                        });
+                                    }} />,
+                                    <Link to={`/quiz/${quiz.id}/edit`}>
+                                        <EditOutlined key="edit" />
+                                    </Link>
+                                ]}
+                            >
+                                {contextHolder}
+                                <Link to={`/quiz/${quiz.id}/submissions`}>
                                     <Meta
                                         title={quiz.title}
                                         description={`${quiz.submissionsCount} Submissions`}
                                     />
-                                </Card>
-                            </Link>
+                                </Link>
+                            </Card>
                         </Col>
                     )
                 })}

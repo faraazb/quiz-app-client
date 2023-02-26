@@ -6,14 +6,28 @@ import { GetQuizContext, GetQuizHandlerContext } from '../../contexts/CreateQuiz
 import Question from "../Question";
 
 import './index.css'
+import { useParams } from 'react-router';
 const url = "http://localhost:5000/quizzes"
 const QuizCreationPage = () => {
     const { quiz } = GetQuizContext()
-    const { handleAddQuestion, handleQuizTitle, handleQuizDescription, handleQuizSettings } = GetQuizHandlerContext()
+    const { handleSetQuiz ,handleAddQuestion, handleQuizTitle, handleQuizDescription, handleQuizSettings } = GetQuizHandlerContext()
     const [settings, setSettings] = useState(quiz.settings);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("")
-
+    const { id } = useParams();
+    
+    const getCreatedQuiz = async () => {
+        try {
+            const createdQuiz = await axios.get(`http://localhost:5000/quizzes/${id}`);
+            handleSetQuiz(createdQuiz.data.data[0]);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    };
+    useEffect(() => {
+        getCreatedQuiz();
+    }, []);
     useEffect(() => {
         handleQuizSettings(settings);
     }, [settings]);
@@ -24,13 +38,23 @@ const QuizCreationPage = () => {
         handleQuizDescription(description)
     }, [description]);
 
+    useEffect(() => {
+        const unloadCallback = (event) => {
+            event.preventDefault();
+            event.returnValue = "";
+            return "";
+        };
+        window.addEventListener("beforeunload", unloadCallback);
+        return () => window.removeEventListener("beforeunload", unloadCallback);
+    }, []);
+
     const validate = () => {
         if (quiz.title === "") {
             Modal.error({
                 title: 'Title !!!',
                 content: 'Quiz title is required',
             });
-            return true
+            return false
         }
         for (let i = 0; i < quiz.questions.length; i++) {
             const question = quiz.questions[i];
@@ -44,16 +68,6 @@ const QuizCreationPage = () => {
             let correctOptions = question.options.filter((option) => {
                 return option.isCorrect
             })
-            let optionText = question.options.filter((optTxt) => {
-                return optTxt.text
-            })
-            if (optionText.length === 0) {
-                Modal.error({
-                    title: 'Option text !!!',
-                    content: 'Enter option text',
-                });
-                return false
-            }
             if (correctOptions.length === 0) {
                 Modal.error({
                     title: 'Correct option !!!',
@@ -61,11 +75,17 @@ const QuizCreationPage = () => {
                 });
                 return false
             }
-            return true
+            question.options.filter((optTxt) => {
+                if (optTxt.text === "") {
+                    Modal.error({
+                        title: 'Option text !!!',
+                        content: 'Enter option text',
+                    });
+                    return false
+                }
+            })
         }
-        Modal.success({
-            content: 'Saved the quiz',
-        });
+        return true;
     }
     const handleSave = async (event) => {
         const isValid = validate();
@@ -77,7 +97,7 @@ const QuizCreationPage = () => {
             })
             question.type = correctOptions.length > 1 ? "multiple_ans" : "single_ans";
         })
-        const response = await axios.post(url, quizCopy);  
+        const response = await axios.post(url, quizCopy);
     };
     return (
         <div className='quizCreationPage'>

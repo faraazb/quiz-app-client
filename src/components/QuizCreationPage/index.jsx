@@ -126,7 +126,9 @@ const QuizCreationPage = () => {
                                 allowClear={true}
                                 autoSize
                                 autoFocus
-                                onChange={setTitle}
+                                onChange={(t)=>{
+                                    setTitle(t.target.value);
+                                }}
                                 value={quiz.title}
                             />
                         </div>
@@ -136,7 +138,9 @@ const QuizCreationPage = () => {
                                 className="description"
                                 allowClear={true}
                                 autoFocus
-                                onChange={setDescription}
+                                onChange={(d)=>{
+                                    setDescription(d.target.value);
+                                }}
                                 value={quiz.description}
                             />
                         </div>

@@ -4,7 +4,6 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "antd/dist/reset.css";
 import "./index.css";
 import App from "./App";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { DashboardPage, StartQuizPage, ResultPage, SubmissionsPage, QuizCreationPage } from "./components";
 import { QuizProvider } from "./contexts/CreateQuizContexts";
 

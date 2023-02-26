@@ -11,7 +11,7 @@ const ResultPage = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const getSubmission = async () => {
         try {
-            const submission = await axios.get(`http://localhost:8000/submissions/${submissionId}`);
+            const submission = await axios.get(`http://localhost:5000/submissions/${submissionId}`);
             console.log(submission);
             setSubmission(submission.data);
             // console.log(submission.data.data);

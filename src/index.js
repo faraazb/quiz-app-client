@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "antd/dist/reset.css";
 import "./index.css";
 import App from "./App";
-import { DashboardPage, StartQuizPage, SubmissionsPage } from "./components";
+import { DashboardPage, StartQuizPage, ResultPage, SubmissionsPage } from "./components";
 
 const router = createBrowserRouter([
     {
@@ -28,6 +28,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/quiz/:quizId/submissions/:submissionId",
+                element: <ResultPage />,
             },
         ],
     },

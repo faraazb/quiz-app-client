@@ -1,10 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "antd/dist/reset.css";
 import "./index.css";
 import App from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { DashboardPage, StartQuizPage, ResultPage, QuizCreationPage } from "./components";
+import { DashboardPage, StartQuizPage, ResultPage, SubmissionsPage, QuizCreationPage } from "./components";
 import { QuizProvider } from "./contexts/CreateQuizContexts";
 
 const router = createBrowserRouter([
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/quiz/:quizId/submissions",
+                element: <SubmissionsPage />
             },
             {
                 path: "/quiz/:quizId/submissions/:submissionId",

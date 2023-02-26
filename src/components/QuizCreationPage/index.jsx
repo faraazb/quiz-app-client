@@ -1,21 +1,24 @@
 import { React, useState, useEffect } from 'react';
-import { Button, Form, Input, InputNumber, Modal } from 'antd';
-import { Tabs } from 'antd';
+import { Button, Input, InputNumber, Tabs, Modal } from 'antd';
 import axios from 'axios';
 import { GetQuizContext, GetQuizHandlerContext } from '../../contexts/CreateQuizContexts';
 import Question from "../Question";
+import { useParams } from 'react-router';
+import { Link } from "react-router-dom";
 
 import './index.css'
-import { useParams } from 'react-router';
-const url = "http://localhost:5000/quizzes"
+
+const { TextArea } = Input;
+
 const QuizCreationPage = () => {
     const { quiz } = GetQuizContext()
-    const { handleSetQuiz ,handleAddQuestion, handleQuizTitle, handleQuizDescription, handleQuizSettings } = GetQuizHandlerContext()
+    const { handleSetQuiz, handleAddQuestion, handleQuizTitle, handleQuizDescription, handleQuizSettings } = GetQuizHandlerContext()
     const [settings, setSettings] = useState(quiz.settings);
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("")
+    const [title, setTitle] = useState(quiz.title);
+    const [description, setDescription] = useState(quiz.description);
+    console.log(quiz)
     const { id } = useParams();
-    
+
     const getCreatedQuiz = async () => {
         try {
             const createdQuiz = await axios.get(`http://localhost:5000/quizzes/${id}`);
@@ -84,6 +87,10 @@ const QuizCreationPage = () => {
                     return false
                 }
             })
+            question.options = question.options.map((opt) => {
+                const { text, isCorrect } = opt;
+                return { text, isCorrect };
+            })
         }
         return true;
     }
@@ -97,39 +104,42 @@ const QuizCreationPage = () => {
             })
             question.type = correctOptions.length > 1 ? "multiple_ans" : "single_ans";
         })
-        const response = await axios.post(url, quizCopy);
+        const response = await axios.put(`http://localhost:5000/quizzes/${id}`, quizCopy);
+        if (response) {
+            Modal.success({
+                content: "Quiz saved Successfully"
+            })
+        }
+        else {
+            console.log("response", response)
+        }
     };
     return (
         <div className='quizCreationPage'>
             <Tabs defaultActiveKey='questions'>
                 <Tabs.TabPane tab='Questions' key='questions'>
-                    <Form id='form'>
-                        <h2>Title</h2>
-                        <Form.Item
-                            name="title"
-                            rules={[{
-                                required: true,
-                                message: 'Please enter the valid Quiz title!',
-                            }]}>
-                            <Input
-                                className='title'
+                    <div id='form'>
+                        <div>
+                            <h2>Title</h2>
+                            <TextArea
+                                className="title"
+                                allowClear={true}
+                                autoSize
                                 autoFocus
-                                value={title}
-                                onChange={(t) => {
-                                    setTitle(t.target.value)
-                                }} />
-                        </Form.Item>
-                        <h2>Description</h2>
-                        <Form.Item
-                            name="description">
-                            <Input
-                                className='description'
-                                size="large"
-                                value={description}
-                                onChange={(d) => {
-                                    setDescription(d.target.value)
-                                }} />
-                        </Form.Item>
+                                onChange={setTitle}
+                                value={quiz.title}
+                            />
+                        </div>
+                        <div>
+                            <h2>Description</h2>
+                            <TextArea
+                                className="description"
+                                allowClear={true}
+                                autoFocus
+                                onChange={setDescription}
+                                value={quiz.description}
+                            />
+                        </div>
                         <div style={{ margin: "5%" }}>
                             <div>
                                 {quiz.questions.map((question, index) => {
@@ -148,10 +158,15 @@ const QuizCreationPage = () => {
                         <Button type='primary' onClick={handleAddQuestion}>
                             Add Question
                         </Button>
-                        <Button className='submit' type="primary" htmlType='submit' onClick={handleSave}>
+                        <Button className='save' type="primary" htmlType='submit' onClick={handleSave}>
                             Save
                         </Button>
-                    </Form>
+                        <Link to="/dashboard">
+                            <Button className='submit' type="primary" htmlType='submit'>
+                                Submit
+                            </Button>
+                        </Link>
+                    </div>
                 </Tabs.TabPane>
                 <Tabs.TabPane tab='Settings' key='settings'>
                     <div>

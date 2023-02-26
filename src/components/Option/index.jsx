@@ -55,22 +55,23 @@ const Option = (props) => {
                 value={option.text}
                 addonBefore={
                     <Tooltip placement="top" title={checkboxToolTipText}>
-                        <Checkbox onChange={checkboxOnChange} />
+                        <Checkbox
+                            onChange={checkboxOnChange}
+                            checked={option.isCorrect}
+                        />
                     </Tooltip>
                 }
                 status={optionStatus}
                 onChange={optionOnChangeHandler}
                 onBlur={optionOnChangeHandler}
-                autoFocus
                 addonAfter={
                     <Tooltip placement="top" title={removeToolTipText}>
                         <Button
                             type="primary"
                             size="small"
                             icon={<MinusOutlined />}
-                            autoFocus
                             onClick={(event) => {
-                                handleDeleteOption(questionKey, option.id);
+                                handleDeleteOption(questionKey, option._id);
                             }}
                         />
                     </Tooltip>

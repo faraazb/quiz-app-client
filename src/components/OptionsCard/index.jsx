@@ -22,13 +22,17 @@ const OptionsCard = (props) => {
     };
     const addOptions = () => {
         const question = quiz.questions.find(
-            (question) => question.id === parentKey
+            (question) => question._id === parentKey
         );
         if (optionCount !== question.options.length)
             setOptionCount(question.options.length);
         return question.options.map((option) => {
             return (
-                <Option key={option.id} data={option} questionKey={parentKey} />
+                <Option
+                    key={option._id}
+                    data={option}
+                    questionKey={parentKey}
+                />
             );
         });
     };

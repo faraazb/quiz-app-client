@@ -45,7 +45,7 @@ const Question = (props) => {
         }
         setQuestion((oldQuestion) => {
             const newQuestion = structuredClone(oldQuestion);
-            newQuestion.title = value;
+            newQuestion.text = value;
             return newQuestion;
         });
     };
@@ -73,7 +73,7 @@ const Question = (props) => {
                         icon={<DeleteOutlined />}
                         onClick={(event) => {
                             if (handleDeleteQuestion)
-                                handleDeleteQuestion(question.id);
+                                handleDeleteQuestion(question._id);
                         }}
                     />
                 </Tooltip>
@@ -89,7 +89,7 @@ const Question = (props) => {
                     onChange={titleOnChangeHandler}
                     onBlur={titleOnChangeHandler}
                     status={titleStatus}
-                    value={question.title}
+                    value={question.text}
                 />
             </div>
             <div>
@@ -115,7 +115,7 @@ const Question = (props) => {
                     Reset
                 </Button>
             </div>
-            <OptionsCard parentKey={question.id} />
+            <OptionsCard parentKey={question._id} />
         </Card>
     );
 };

@@ -25,17 +25,32 @@
 }
 .title {
     font-size: x-large;
-    margin: 1% 0;
+    margin: 5px 0;
+}
+.sub-text {
+    margin-top: 5px;
 }
 .green {
     color: rgb(2, 193, 2);
 }
+.green-bg {
+    background-color: rgb(2, 193, 2);
+}
 .gray {
     color: gray;
 }
+.gray-bg {
+    background-color: rgb(202, 200, 200);
+}
 
 .yellow {
-    color: rgb(197, 197, 0);
+    color: rgb(197, 0, 0);
+}
+.yellow-bg {
+    color:  rgb(197, 0, 0);
+}
+.blue-bg {
+    background-color:  rgb(71, 130, 248);
 }
 
 .navigation {

@@ -1,18 +1,39 @@
 import { Button, Col, Progress, Row } from "antd";
 import { useState } from "react";
 import "./index.css";
-const NavigationPane = (props) => {
-    const [progress, setProgress] = useState(5);
+import {
+    TakeQuizContext,
+    TakeQuizHandlerContext,
+} from "../../contexts/TakeQuizContext";
+const NavigationPane = () => {
+    const { quiz } = TakeQuizContext();
+    const { started, questionIds, currentQuestion, questionsStatus } = quiz;
+    const { navigateQuestion, getQuestionStatusCount } =
+        TakeQuizHandlerContext();
+    const { attempted, unattempted, skipped } = getQuestionStatusCount();
     const getPercentage = (current, total) => {
         return (current / total) * 100;
     };
     const count = 50;
     const getNavButtons = (count) => {
         const buttonsArray = [];
-        for (let i = 1; i <= count; i++) {
+        for (let i = 0; i < questionIds.length; i++) {
+            let buttonColor = "gray-bg";
+            if (i === currentQuestion) {
+                buttonColor = "blue-bg";
+            } else if (questionsStatus[questionIds[i]] === "skipped") {
+                buttonColor = "yellow-bg";
+            } else if (questionsStatus[questionIds[i]] === "attempted") {
+                buttonColor = "green-bg";
+            }
             buttonsArray.push(
-                <Col>
-                    <Button>{i}</Button>
+                <Col key={questionIds[i]}>
+                    <Button
+                        className={buttonColor}
+                        onClick={() => navigateQuestion(i)}
+                    >
+                        {i + 1}
+                    </Button>
                 </Col>
             );
         }
@@ -24,17 +45,24 @@ const NavigationPane = (props) => {
                 <div className="progress-bar-container">
                     <Progress
                         strokeLinecap="butt"
-                        percent={getPercentage(progress, 10)}
+                        percent={getPercentage(
+                            attempted,
+                            attempted + skipped + unattempted
+                        )}
                         showInfo={false}
                         status="active"
                         strokeColor={{ from: "#108ee9", to: "#87d068" }}
                     />
                 </div>
                 <div className="progress-stats-container">
-                    <div className="title">Progress</div>
-                    <div className="green">7 attempted</div>
-                    <div className="gray">2 unattempted</div>
-                    <div className="yellow">1 skipped</div>
+                    <div className="title">
+                        Progress ( {attempted}/{questionIds.length})
+                    </div>
+                    <div className="sub-text green">{attempted} attempted</div>
+                    <div className="sub-text gray">
+                        {unattempted} unattempted
+                    </div>
+                    <div className="sub-text yellow">{skipped} skipped</div>
                 </div>
             </div>
             <div className="navigation">

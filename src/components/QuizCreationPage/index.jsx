@@ -62,10 +62,10 @@ const QuizCreationPage = () => {
                 return false
             }
             return true
-            Modal.success({
-                content: 'Saved the quiz',
-            });
         }
+        Modal.success({
+            content: 'Saved the quiz',
+        });
     }
     const handleSave = async (event) => {
         const isValid = validate();

@@ -10,6 +10,7 @@
 #quiz-question {
     grid-area: question;
     padding: 3em;
+    background-color: rgb(240, 248, 255);
 }
 
 #quiz-question-loading {
@@ -72,6 +73,8 @@
 
 .question-points {
     font-size: 16px;
+    color: rgb(250, 58, 58);
+    margin-left: 0;
 }
 
 .question-options {
@@ -85,6 +88,18 @@
 }
 
 .question-option-text {
-    font-size: 17px;
+    font-size: 18px;
 }
 
+#quiz-question .question-container .question-actions .next {
+    margin-left: 3em;
+}
+#quiz-question .question-container .question-actions .previous {
+    margin-right: 3em;
+}
+.question-options-container {
+    margin-left: 2em;
+}
+.multi-single {
+    font-style: italic;
+}

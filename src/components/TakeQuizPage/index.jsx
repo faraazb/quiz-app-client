@@ -139,19 +139,21 @@ const TakeQuizPage = () => {
                             <Question />
                             <div className="question-actions">
                                 <Button
+                                    className="previous"
                                     disabled={currentQuestion === 0}
                                     onClick={prevQuestion}
                                 >
-                                    Previous
+                                   &laquo; Previous 
                                 </Button>
                                 <Button
+                                    className="next"
                                     disabled={
                                         currentQuestion ===
                                         questionIds.length - 1
                                     }
                                     onClick={nextQuestion}
                                 >
-                                    Next
+                                    Next &raquo;
                                 </Button>
                             </div>
                         </div>
@@ -259,7 +261,7 @@ const Question = () => {
                 <Text className="question-points" strong>
                     {points} {points > 1 ? "points" : "point"}
                 </Text>
-                <Paragraph>({message})</Paragraph>
+                <Paragraph className="multi-single">({message})</Paragraph>
             </div>
             <div className="question-options-container">
                 <Options />

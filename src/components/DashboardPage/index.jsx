@@ -1,39 +1,121 @@
 import "./dashboardPage.css";
-import { Card, Col, Row } from 'antd';
+import { Card, Col, Row, Form, Input, Modal, Button, message } from 'antd';
 import axios from "axios";
-import { Button } from 'antd';
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
-
+import { CopyOutlined, EditOutlined } from '@ant-design/icons';
+const { Meta } = Card;
+const QuizCreateForm = ({ open, onCreate, onCancel }) => {
+    const [form] = Form.useForm();
+    return (
+        <Modal
+            open={open}
+            title="Create a new Quiz"
+            okText="Create"
+            cancelText="Cancel"
+            onCancel={onCancel}
+            onOk={() => {
+                form
+                    .validateFields()
+                    .then((values) => {
+                        form.resetFields();
+                        onCreate(values);
+                    })
+                    .catch((info) => {
+                        console.log('Validate Failed:', info);
+                    });
+            }}
+        >
+            <Form
+                form={form}
+                layout="vertical"
+                name="form_in_modal"
+            >
+                <Form.Item
+                    name="title"
+                    label="Title"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please input the title of quiz!',
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+                <Form.Item name="description" label="Description">
+                    <Input.TextArea />
+                </Form.Item>
+            </Form>
+        </Modal>
+    );
+};
 const DashboardPage = () => {
     const [quizzes, setQuizzes] = useState(null);
+    const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
+    const onCreate = async (values) => {
+        // console.log('Received values of form: ', values);
+        const response = await axios.post('http://localhost:5000/quizzes', values);
+        // console.log(response.data.data.id);
+        navigate(`http://localhost:5000/quiz/${response.data.data.id}/edit`, { replace: true });
+        setOpen(false);
+    };
     const getQuizzes = async () => {
-        try{
+        try {
             const quizzes = await axios.get("http://localhost:5000/quizzes/");
             setQuizzes(quizzes);
             // console.log(quizzes.data.data);
         }
-        catch(err)  {
+        catch (err) {
             console.log(err);
         }
     };
     useEffect(() => {
         getQuizzes();
     }, []);
-    return  (
+    const [messageApi, contextHolder] = message.useMessage();
+    return (
         <div className='dashboard'>
-            <Link to={"/quiz/create"}>
-                <Button type="primary" shape='round'>Create Quiz</Button>
-            </Link>
+            <Button type="primary" shape='round' onClick={() => {
+                setOpen(true);
+            }}>Create Quiz</Button>
+            <QuizCreateForm
+                open={open}
+                onCreate={onCreate}
+                onCancel={() => {
+                    setOpen(false);
+                }}
+            />
             <hr />
-            <Row gutter={[10,10]} justify="center">
+            <Row gutter={[10, 10]} justify="center">
                 {quizzes !== null && quizzes.data.data.map((quiz) => {
                     return (
-                        <Col key = {quiz.id}>
-                            <Card size="small" title={quiz.title} style={{ width: 200, height: 100 }}>
-                                <p>{quiz.submissionsCount} Submissions</p>
-                            </Card>
+                        <Col key={quiz.id}>
+                            <Link to={`http://localhost:3000/quiz/${quiz.id}/submissions`}>
+                                <Card size="small"
+                                    className="card"
+                                    style={{ width: 250 }}
+                                    actions={[
+                                        <CopyOutlined key="copy" onClick={() => {
+                                            navigator.clipboard.writeText(`http://localhost:3000/quiz/${quiz.id}`);
+                                            messageApi.open({
+                                                type: 'success',
+                                                content: 'Quiz Link Copied',
+                                            });
+                                        }} />,
+                                        <Link to={`http://localhost:3000/quiz/${quiz.id}/edit`}>
+                                            <EditOutlined key="edit" />
+                                        </Link>
+                                    ]}
+                                >
+                                    {contextHolder}
+                                    <Meta
+                                        title={quiz.title}
+                                        description={`${quiz.submissionsCount} Submissions`}
+                                    />
+                                </Card>
+                            </Link>
                         </Col>
                     )
                 })}

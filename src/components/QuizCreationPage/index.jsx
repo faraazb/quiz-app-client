@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react';
-import { Button, Input, InputNumber, Tabs, Modal } from 'antd';
+import { Button, Input, InputNumber, Tabs, Modal, Radio, Checkbox, Typography } from 'antd';
 import axios from 'axios';
 import { GetQuizContext, GetQuizHandlerContext } from '../../contexts/CreateQuizContexts';
 import Question from "../Question";
@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import './index.css'
 
 const { TextArea } = Input;
+const { Title, Paragraph, Text } = Typography;
 
 const QuizCreationPage = () => {
     const { quiz } = GetQuizContext()
@@ -16,7 +17,7 @@ const QuizCreationPage = () => {
     const [settings, setSettings] = useState(quiz.settings);
     const [title, setTitle] = useState(quiz.title);
     const [description, setDescription] = useState(quiz.description);
-    console.log(quiz)
+    // console.log(quiz)
     const { id } = useParams();
 
     const getCreatedQuiz = async () => {
@@ -126,7 +127,9 @@ const QuizCreationPage = () => {
                                 allowClear={true}
                                 autoSize
                                 autoFocus
-                                onChange={setTitle}
+                                onChange={(t)=>{
+                                    setTitle(t.target.value);
+                                }}
                                 value={quiz.title}
                             />
                         </div>
@@ -136,7 +139,9 @@ const QuizCreationPage = () => {
                                 className="description"
                                 allowClear={true}
                                 autoFocus
-                                onChange={setDescription}
+                                onChange={(d)=>{
+                                    setDescription(d.target.value);
+                                }}
                                 value={quiz.description}
                             />
                         </div>
@@ -145,7 +150,7 @@ const QuizCreationPage = () => {
                                 {quiz.questions.map((question, index) => {
                                     return (
                                         <div key={question.id}>
-                                            <Question
+                                            <Question key={question.id}
                                                 title={`Question ${index + 1}`}
                                                 defaultPoints={quiz.settings.defaultPoints}
                                                 data={question}
@@ -185,10 +190,52 @@ const QuizCreationPage = () => {
                         />
                     </div>
                 </Tabs.TabPane>
-                <Tabs.TabPane tab='Preview' tabKey='preview'></Tabs.TabPane>
+                <Tabs.TabPane tab='Preview' tabKey='preview'>
+                    <div>
+                        {quiz.questions.map((question, index) => {
+                            return (
+                                <div key={question.id}>
+                                    <Question2
+                                        key={question.id}
+                                        question={question}
+                                    />
+                                </div>
+                            );
+                        })}
+                    </div>
+                </Tabs.TabPane>
             </Tabs>
-        </div>
+        </div >
     )
 }
+const Question2 = ({ question }) => {
+    const { _id, text, points, options } = question;
+    let correctOptions = options.filter((option) => {
+        return option.isCorrect
+    })
+    const type = correctOptions.length > 1 ? "multiple_ans" : "single_ans";
+    const Option = type === "single_ans" ? Radio : Checkbox;
+    console.log(options);
+    const message =
+        type === "single_ans"
+            ? "This question has a single answer"
+            : "This question can have multiple answers";
 
+    return (
+        <div className="preview-quiz-question">
+            <div className="question-title">
+                <Title level={2}>{text === "" ? "Empty Question" : text}</Title>
+                <Text className="question-points" strong>
+                    {points} {points > 1 ? "points" : "point"}
+                </Text>
+                <Paragraph>({message})</Paragraph>
+            </div>
+            <div className="question-options-container">
+                {options.map((option) => {
+                    return <Option key={option.id}>{option.text} </Option>
+                })}
+            </div>
+        </div>
+    );
+};
 export default QuizCreationPage;

@@ -5,7 +5,13 @@ import "antd/dist/reset.css";
 import "./index.css";
 import App from "./App";
 import { TakeQuizProvider } from "./contexts/TakeQuizContext";
-import { DashboardPage, StartQuizPage, ResultPage, SubmissionsPage, QuizCreationPage } from "./components";
+import {
+    DashboardPage,
+    TakeQuizPage,
+    ResultPage,
+    SubmissionsPage,
+    QuizCreationPage,
+} from "./components";
 import { QuizProvider } from "./contexts/CreateQuizContexts";
 
 const router = createBrowserRouter([
@@ -23,15 +29,23 @@ const router = createBrowserRouter([
             },
             {
                 path: "quiz/:id/edit",
-                element: <QuizProvider><QuizCreationPage/></QuizProvider>,
+                element: (
+                    <QuizProvider>
+                        <QuizCreationPage />
+                    </QuizProvider>
+                ),
             },
             {
                 path: "/quiz/:quizId",
-                element: <TakeQuizProvider><TakeQuizPage /></TakeQuizProvider>,
+                element: (
+                    <TakeQuizProvider>
+                        <TakeQuizPage />
+                    </TakeQuizProvider>
+                ),
             },
             {
                 path: "/quiz/:quizId/submissions",
-                element: <SubmissionsPage />
+                element: <SubmissionsPage />,
             },
             {
                 path: "/quiz/:quizId/submissions/:submissionId",

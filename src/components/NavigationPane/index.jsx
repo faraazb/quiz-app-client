@@ -1,4 +1,4 @@
-import { Button, Col, Progress, Row, Modal, Typography } from "antd";
+import { Button, Col, Progress, Row, Modal, Typography, message } from "antd";
 import { CheckCircleFilled, ExclamationCircleFilled } from "@ant-design/icons";
 import { red, green } from "@ant-design/colors";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ const { Title } = Typography;
 const NavigationPane = (props) => {
     const { quizId } = props;
     const navigate = useNavigate();
+    const [messageApi, contextHolder] = message.useMessage();
     const { quiz } = TakeQuizContext();
     const [isSubmitConfirmOpen, setIsSubmitConfirmOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -46,8 +47,15 @@ const NavigationPane = (props) => {
         console.log("sub", submissionObject);
         let response;
         const getResponse = async () => {
-            const response = await saveSubmission(quizId, submissionObject);
-            setSubmissionResponse(response);
+            try {
+                const response = await saveSubmission(quizId, submissionObject);
+                setSubmissionResponse(response);
+            } catch (err) {
+                messageApi.open({
+                    type: "error",
+                    content: "Failed to get result!",
+                });
+            }
         };
         getResponse();
     };

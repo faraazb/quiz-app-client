@@ -16,4 +16,9 @@
 }
 .preview-quiz-question  {
     margin-top:30px;
+    border-style: solid;
+    border-color: rgb(159, 123, 205);
+    border-radius: 2em;
+    border-width: 0.2em;
+    padding: 1em 1em 1em 1em;
 }

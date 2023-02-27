@@ -191,7 +191,7 @@ const QuizCreationPage = () => {
                     </div>
                 </Tabs.TabPane>
                 <Tabs.TabPane tab='Preview' tabKey='preview'>
-                    <div className='preview-quiz-question-container'>
+                    <div>
                         {quiz.questions.map((question, index) => {
                             return (
                                 <div key={question.id}>

@@ -9,6 +9,7 @@ import {
     TakeQuizHandlerContext,
 } from "../../contexts/TakeQuizContext";
 import StartQuizPage from "../StartQuizPage";
+import NavigationPane from "../NavigationPane";
 import "./index.css";
 
 const { Title, Paragraph, Text } = Typography;
@@ -143,7 +144,7 @@ const TakeQuizPage = () => {
                                     disabled={currentQuestion === 0}
                                     onClick={prevQuestion}
                                 >
-                                   &laquo; Previous 
+                                    &laquo; Previous
                                 </Button>
                                 <Button
                                     className="next"
@@ -164,7 +165,9 @@ const TakeQuizPage = () => {
                         </div>
                     )}
                 </div>
-                <div id="quiz-navigation"></div>
+                <div id="quiz-navigation">
+                    <NavigationPane quizId={quizId} />
+                </div>
                 {getSubmitConfirmModal()}
             </section>
         );

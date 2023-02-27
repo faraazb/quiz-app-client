@@ -1,0 +1,68 @@
+.navigation-container {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(255, 255, 255);
+    margin: 1% 2%;
+    box-shadow: 0 1px 5px 1px rgb(96, 96, 96);
+    overflow: scroll;
+    height: auto;
+    border-radius: 10px;
+}
+.progress-bar-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: center;
+    position: relative;
+    top: -9px;
+    left: 4px;
+    width: 100%;
+}
+.progress-stats-container {
+    margin: 1% 4%;
+
+    font-weight: 300;
+}
+.title {
+    font-size: x-large;
+    margin: 5px 0;
+}
+.sub-text {
+    margin-top: 5px;
+}
+.green {
+    color: rgb(2, 193, 2);
+}
+.green-bg {
+    background-color: rgb(2, 193, 2);
+}
+.gray {
+    color: gray;
+}
+.gray-bg {
+    background-color: rgb(202, 200, 200);
+}
+
+.yellow {
+    color: rgb(197, 0, 0);
+}
+.yellow-bg {
+    background-color: rgb(255, 123, 123);
+}
+.blue-bg {
+    background-color: rgb(71, 130, 248);
+}
+
+.navigation {
+    margin: 20px 4%;
+    display: flex;
+    justify-content: center;
+}
+.bottom-bar {
+    margin: 5px 0;
+    padding: 2px;
+    width: 100%;
+    align-self: flex-end;
+    display: flex;
+    justify-content: center;
+}

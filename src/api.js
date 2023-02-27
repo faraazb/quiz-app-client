@@ -18,5 +18,18 @@ async function getSubmissions(quizId) {
         throw err;
     }
 }
+async function saveSubmission(quizId, submmission) {
+    try {
+        const response = await api.post(
+            `quizzes/${quizId}/submissions`,
+            submmission
+        );
+        console.log("Res", response);
+        if (response.data.data) return response.data.data;
+        else throw new Error("Failed to get submissions");
+    } catch (err) {
+        throw err;
+    }
+}
 
-export { getSubmissions };
+export { getSubmissions, saveSubmission };

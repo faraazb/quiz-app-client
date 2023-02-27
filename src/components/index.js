@@ -4,7 +4,7 @@ import TakeQuizPage from "./TakeQuizPage";
 import StartQuizPage from "./StartQuizPage";
 import SubmissionsPage from "./SubmissionsPage";
 import ResultPage from "./ResultPage";
-
+import QuizCreationPage from "./QuizCreationPage";
 
 export {
     Header,
@@ -13,4 +13,6 @@ export {
     StartQuizPage,
     SubmissionsPage,
     ResultPage,
+    QuizCreationPage
+
 };

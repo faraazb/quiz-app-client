@@ -5,7 +5,8 @@ import "antd/dist/reset.css";
 import "./index.css";
 import App from "./App";
 import { TakeQuizProvider } from "./contexts/TakeQuizContext";
-import { DashboardPage, TakeQuizPage, ResultPage, SubmissionsPage } from "./components";
+import { DashboardPage, StartQuizPage, ResultPage, SubmissionsPage, QuizCreationPage } from "./components";
+import { QuizProvider } from "./contexts/CreateQuizContexts";
 
 const router = createBrowserRouter([
     {
@@ -13,11 +14,16 @@ const router = createBrowserRouter([
         element: <App />,
         children: [
             {
+                path: "/",
+                element: <DashboardPage />,
+            },
+            {
                 path: "/dashboard",
                 element: <DashboardPage />,
             },
             {
-                path: "/quiz/create",
+                path: "quiz/:id/edit",
+                element: <QuizProvider><QuizCreationPage/></QuizProvider>,
             },
             {
                 path: "/quiz/:quizId",

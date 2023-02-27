@@ -190,58 +190,77 @@ const RadioOptions = () => {
     const setSelectedOption = (event) => {
         updateSelectedOptions(questionId, [event.target.value]);
     };
+    const clearSelection = (event) => {
+        updateSelectedOptions(questionId, [event.target.value]);
+    }
 
     return (
-        <Radio.Group
-            onChange={setSelectedOption}
-            value={
-                question.selectedOptions.length > 0
-                    ? question.selectedOptions[0]
-                    : ""
-            }
-        >
-            <div className="question-options">
-                {options &&
-                    options.map(({ _id, text }) => {
-                        return (
-                            <Radio key={_id} value={_id}>
-                                <div className="question-option-text">
-                                    {text}
-                                </div>
-                            </Radio>
-                        );
-                    })}
+        <div>
+            <Radio.Group
+                onChange={setSelectedOption}
+                value={
+                    question.selectedOptions.length > 0
+                        ? question.selectedOptions[0]
+                        : ""
+                }
+            >
+                <div className="question-options">
+                    {options &&
+                        options.map(({ _id, text }) => {
+                            return (
+                                <Radio key={_id} value={_id}>
+                                    <div className="question-option-text">
+                                        {text}
+                                    </div>
+                                </Radio>
+                            );
+                        })}
+                </div>
+            </Radio.Group>
+            <div>
+                <Button 
+                    className="clear"
+                    onClick={clearSelection}>Clear</Button>
             </div>
-        </Radio.Group>
+        </div>
     );
 };
 
 const CheckboxOptions = () => {
-    const { updateOption, getCurrentQuestion } = TakeQuizHandlerContext();
+    const { updateOption, updateSelectedOptions, getCurrentQuestion } = TakeQuizHandlerContext();
     const { _id: questionId, options } = getCurrentQuestion();
     const {
         quiz: {
             questions: { [questionId]: question },
         },
     } = TakeQuizContext();
+    const clearSelection = (event) => {
+        updateSelectedOptions(questionId, [event.target.checked]);
+    }
 
     // here we update the status for individual option
     return (
-        <div className="question-options">
-            {options.map(({ _id, text }) => {
-                return (
-                    <Checkbox
-                        key={_id}
-                        value={true}
-                        checked={question.selectedOptions.includes(_id)}
-                        onChange={(e) =>
-                            updateOption(questionId, _id, e.target.checked)
-                        }
-                    >
-                        <div className="question-option-text">{text}</div>
-                    </Checkbox>
-                );
-            })}
+        <div>
+            <div className="question-options">
+                {options.map(({ _id, text }) => {
+                    return (
+                        <Checkbox
+                            key={_id}
+                            value={true}
+                            checked={question.selectedOptions.includes(_id)}
+                            onChange={(e) =>
+                                updateOption(questionId, _id, e.target.checked)
+                            }
+                        >
+                            <div className="question-option-text">{text}</div>
+                        </Checkbox>
+                    );
+                })}
+                <div>
+                    <Button 
+                        className="clear" onClick={clearSelection}>Clear</Button>
+                </div>
+            </div>
         </div>
     );
 };

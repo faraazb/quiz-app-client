@@ -1,22 +1,56 @@
 import { Button, Col, Progress, Row, Modal, Typography } from "antd";
 import { CheckCircleFilled, ExclamationCircleFilled } from "@ant-design/icons";
 import { red, green } from "@ant-design/colors";
-import "./index.css";
+import { Link, useNavigate } from "react-router-dom";
 import {
     TakeQuizContext,
     TakeQuizHandlerContext,
 } from "../../contexts/TakeQuizContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { saveSubmission } from "../../api";
+import "./index.css";
 const { Title } = Typography;
 
-const NavigationPane = () => {
+const NavigationPane = (props) => {
+    const { quizId } = props;
+    const navigate = useNavigate();
     const { quiz } = TakeQuizContext();
     const [isSubmitConfirmOpen, setIsSubmitConfirmOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submissionResponse, setSubmissionResponse] = useState(null);
     const { questionIds, currentQuestion, questionsStatus } = quiz;
     const { navigateQuestion, getQuestionStatusCount } =
         TakeQuizHandlerContext();
     const { attempted, unattempted, skipped } = getQuestionStatusCount();
+    useEffect(() => {
+        if (submissionResponse) {
+            const { submission_id } = submissionResponse;
+            console.log("Quiz ID", quizId);
+            if (submission_id)
+                navigate(`/quiz/${quizId}/submissions/${submission_id}`, {
+                    replace: false,
+                });
+        }
+    }, [submissionResponse]);
+    const submitQuizResponse = () => {
+        const { username, questions } = quiz;
+        const submitQuestions = [];
+        console.log({ username, questions });
+        Object.keys(questions).forEach((quest) => {
+            submitQuestions.push({
+                _id: quest,
+                selectedOptions: questions[quest].selectedOptions,
+            });
+        });
+        const submissionObject = { username, questions: submitQuestions };
+        console.log("sub", submissionObject);
+        let response;
+        const getResponse = async () => {
+            const response = await saveSubmission(quizId, submissionObject);
+            setSubmissionResponse(response);
+        };
+        getResponse();
+    };
     const getPercentage = (current, total) => {
         return (current / total) * 100;
     };
@@ -48,6 +82,7 @@ const NavigationPane = () => {
                 closable={false}
                 maskClosable={false}
                 width={450}
+                onOk={submitQuizResponse}
                 cancelButtonProps={{ disabled: isSubmitting }}
                 onCancel={() => setIsSubmitConfirmOpen(false)}
                 confirmLoading={isSubmitting}

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, Result, Typography, message } from "antd";
+import { Button, Result, Typography, message, Modal } from "antd";
 import { useParams, Link } from "react-router-dom";
-import { getSubmissionsByIdApi } from "../../api";
 
 const { Paragraph } = Typography;
 
@@ -13,10 +12,10 @@ const ResultPage = () => {
         try {
             const submission = await getSubmissionsByIdApi(submissionId);
             setSubmission(submission.data);
+            // console.log(submission.data.data);
         } catch (err) {
-            messageApi.open({
-                type: "error",
-                content: "Failed to get result!",
+            Modal.error({
+                title: "Failed to get result!",
             });
         }
     };

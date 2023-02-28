@@ -34,15 +34,18 @@ const QuizCreationPage = () => {
     const [settings, setSettings] = useState(quiz.settings);
     const [title, setTitle] = useState(quiz.title);
     const [description, setDescription] = useState(quiz.description);
-    // console.log(quiz)
+    
     const { id } = useParams();
 
     const getCreatedQuiz = async () => {
         try {
             const createdQuiz = await getQuizzesByIdApi(id);
             handleSetQuiz(createdQuiz.data.data[0]);
-        } catch (err) {
-            console.log(err);
+        }
+        catch (err) {
+            Modal.error({
+                title: 'Could not fetch the quiz data !!!',
+            });
         }
     };
     useEffect(() => {
@@ -125,10 +128,13 @@ const QuizCreationPage = () => {
         const response = await putQuizzesByIdApi(id, quizCopy);
         if (response) {
             Modal.success({
-                content: "Quiz saved Successfully",
+                content: "Quiz saved Successfully"
+            })
+        }
+        else {
+            Modal.error({
+                title: 'Could not save the quiz !!!',
             });
-        } else {
-            console.log("response", response);
         }
     };
     return (
@@ -244,7 +250,7 @@ const Question2 = ({ question }) => {
     });
     const type = correctOptions.length > 1 ? "multiple_ans" : "single_ans";
     const Option = type === "single_ans" ? Radio : Checkbox;
-    console.log(options);
+    
     const message =
         type === "single_ans"
             ? "This question has a single answer"

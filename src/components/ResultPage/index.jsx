@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Result, Typography, message } from 'antd';
+import { Button, Result, Typography, message,Modal } from 'antd';
 import { useParams, Link } from 'react-router-dom';
 
 const { Paragraph } = Typography;
@@ -17,7 +17,10 @@ const ResultPage = () => {
             // console.log(submission.data.data);
         }
         catch (err) {
-            messageApi.open({ type: "error", content: "Failed to get result!", });
+            // messageApi.open({ type: "error", content: "Failed to get result!", });
+            Modal.error({
+                title: 'Failed to get result!',
+            });
         }
     };
     useEffect(() => {

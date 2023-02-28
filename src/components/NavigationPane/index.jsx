@@ -1,7 +1,7 @@
 import { Button, Col, Progress, Row, Modal, Typography, message } from "antd";
 import { CheckCircleFilled, ExclamationCircleFilled } from "@ant-design/icons";
 import { red, green } from "@ant-design/colors";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
     TakeQuizContext,
     TakeQuizHandlerContext,
@@ -18,6 +18,7 @@ const NavigationPane = (props) => {
     const { quiz } = TakeQuizContext();
     const [isSubmitConfirmOpen, setIsSubmitConfirmOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [responseError, setResponseError] = useState();
     const [submissionResponse, setSubmissionResponse] = useState(null);
     const { questionIds, currentQuestion, questionsStatus } = quiz;
     const { navigateQuestion, getQuestionStatusCount } =
@@ -26,17 +27,24 @@ const NavigationPane = (props) => {
     useEffect(() => {
         if (submissionResponse) {
             const { submission_id } = submissionResponse;
-            console.log("Quiz ID", quizId);
             if (submission_id)
                 navigate(`/quiz/${quizId}/submissions/${submission_id}`, {
                     replace: false,
                 });
         }
     }, [submissionResponse]);
+    useEffect(() => {
+        if (responseError) {
+            messageApi.open({
+                type: "error",
+                content: responseError,
+            });
+        }
+    }, [responseError]);
     const submitQuizResponse = () => {
-        const { username, questions } = quiz;
+        setIsSubmitting(true);
+        let { username, questions } = quiz;
         const submitQuestions = [];
-        console.log({ username, questions });
         Object.keys(questions).forEach((quest) => {
             submitQuestions.push({
                 _id: quest,
@@ -44,17 +52,28 @@ const NavigationPane = (props) => {
             });
         });
         const submissionObject = { username, questions: submitQuestions };
-        console.log("sub", submissionObject);
-        let response;
         const getResponse = async () => {
             try {
                 const response = await saveSubmission(quizId, submissionObject);
                 setSubmissionResponse(response);
             } catch (err) {
-                messageApi.open({
-                    type: "error",
-                    content: "Failed to get result!",
-                });
+                const { code, message } = err;
+                if (code === "ERR_NETWORK") {
+                    setResponseError(new String(message));
+                } else {
+                    const {
+                        data: { message },
+                        status,
+                    } = err.response;
+                    setResponseError(
+                        new String(
+                            status + " " + message + "Quiz not submitted"
+                        )
+                    );
+                }
+            } finally {
+                setIsSubmitting(false);
+                setIsSubmitConfirmOpen(false);
             }
         };
         getResponse();
@@ -132,6 +151,7 @@ const NavigationPane = (props) => {
     };
     return (
         <div className="navigation-container">
+            {contextHolder}
             <div className="progress">
                 <div className="progress-bar-container">
                     <Progress

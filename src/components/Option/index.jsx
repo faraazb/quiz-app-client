@@ -14,12 +14,8 @@ const Option = (props) => {
 
     const [errorMessage, setErrorMessage] = useState("");
     const [optionStatus, setOptionStatus] = useState("");
-    const [option, setOption] = useState(data);
     const { handleDeleteOption, handleUpdateOption } = GetQuizHandlerContext();
 
-    useEffect(() => {
-        handleUpdateOption(questionKey, option);
-    }, [option]);
     const optionOnChangeHandler = (event) => {
         const {
             target: { value },
@@ -31,33 +27,25 @@ const Option = (props) => {
             setOptionStatus("");
             setErrorMessage("");
         }
-        setOption((oldOption) => {
-            const newOption = structuredClone(oldOption);
-            newOption.text = value;
-            return newOption;
-        });
+        handleUpdateOption(questionKey, { _id: data._id, text: value });
     };
     const checkboxOnChange = (event) => {
         const {
             target: { checked },
         } = event;
-        setOption((oldOption) => {
-            const newOption = structuredClone(oldOption);
-            newOption.isCorrect = checked;
-            return newOption;
-        });
+        handleUpdateOption(questionKey, { _id: data._id, isCorrect: checked });
     };
     return (
         <div>
             <Input
                 placeholder="option"
                 allowClear={true}
-                value={option.text}
+                value={data.text}
                 addonBefore={
                     <Tooltip placement="top" title={checkboxToolTipText}>
                         <Checkbox
                             onChange={checkboxOnChange}
-                            checked={option.isCorrect}
+                            checked={data.isCorrect}
                         />
                     </Tooltip>
                 }
@@ -71,7 +59,7 @@ const Option = (props) => {
                             size="small"
                             icon={<MinusOutlined />}
                             onClick={(event) => {
-                                handleDeleteOption(questionKey, option._id);
+                                handleDeleteOption(questionKey, data._id);
                             }}
                         />
                     </Tooltip>

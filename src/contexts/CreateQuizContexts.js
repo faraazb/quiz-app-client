@@ -57,10 +57,12 @@ const quizReducer = (quiz, action) => {
             return newQuiz;
         }
         case ACTIONS.SETQUIZSETTINGS: {
-            newQuiz.settings = action.settings;
+            Object.keys(action.updateObject).forEach((key) => {
+                newQuiz.settings[key] = action.updateObject[key];
+            });
             newQuiz.questions.forEach((question) => {
                 if (question.isPointDefault) {
-                    question.points = quiz.settings.defaultPoints;
+                    question.points = newQuiz.settings.defaultPoints;
                 }
             });
             return newQuiz;
@@ -70,7 +72,7 @@ const quizReducer = (quiz, action) => {
             return newQuiz;
         }
         case ACTIONS.DELETEQUESTION: {
-            newQuiz.questions = quiz.questions.filter(
+            newQuiz.questions = newQuiz.questions.filter(
                 (question) => question._id !== action.questionId
             );
             return newQuiz;
@@ -140,8 +142,8 @@ const QuizProvider = (props) => {
     const handleQuizDescription = (description) => {
         dispatch({ type: ACTIONS.SETQUIZDESC, description });
     };
-    const handleQuizSettings = (settings) => {
-        dispatch({ type: ACTIONS.SETQUIZSETTINGS, settings });
+    const handleQuizSettings = (updateObject) => {
+        dispatch({ type: ACTIONS.SETQUIZSETTINGS, updateObject });
     };
     const handleAddQuestion = () => {
         const questionId = uniqid();

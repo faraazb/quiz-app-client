@@ -89,7 +89,7 @@ const Question = (props) => {
                     onChange={titleOnChangeHandler}
                     onBlur={titleOnChangeHandler}
                     status={titleStatus}
-                    value={question.text}
+                    value={data.text}
                 />
             </div>
             <div>
@@ -100,7 +100,9 @@ const Question = (props) => {
                     addonBefore=<label>Points</label>
                     type="number"
                     min={0}
-                    value={question.points}
+                    value={
+                        data.isPointDefault ? defaultPoints : question.points
+                    }
                     onChange={(points) => {
                         pointOnChangeHandler(false, points);
                     }}

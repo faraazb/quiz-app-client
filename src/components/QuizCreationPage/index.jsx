@@ -32,7 +32,6 @@ const QuizCreationPage = () => {
         handleQuizDescription,
         handleQuizSettings,
     } = GetQuizHandlerContext();
-    const [settings, setSettings] = useState(quiz.settings);
     const [title, setTitle] = useState(quiz.title);
     const [description, setDescription] = useState(quiz.description);
     const { id } = useParams();
@@ -50,9 +49,6 @@ const QuizCreationPage = () => {
     useEffect(() => {
         getCreatedQuiz();
     }, []);
-    useEffect(() => {
-        handleQuizSettings(settings);
-    }, [settings]);
     useEffect(() => {
         handleQuizTitle(title);
     }, [title]);
@@ -211,14 +207,9 @@ const QuizCreationPage = () => {
                         <InputNumber
                             type="number"
                             min={0}
-                            value={settings.defaultPoints}
+                            value={quiz.settings.defaultPoints}
                             onChange={(point) => {
-                                setSettings((olderSettings) => {
-                                    const newSettings =
-                                        structuredClone(olderSettings);
-                                    newSettings.defaultPoints = point;
-                                    return newSettings;
-                                });
+                                handleQuizSettings({ defaultPoints: point });
                             }}
                         />
                     </div>

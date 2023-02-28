@@ -162,8 +162,8 @@ const reducer = (state, action) => {
             nextState.questions[questionId].selectedOptions = optionsIds;
             if (optionsIds.length > 0) {
                 nextState.questionsStatus[questionId] = QUE_STATUS.ATTEMPTED;
-            } else {
-                nextState.questionsStatus[questionId] = QUE_STATUS.SKIPPED;
+            } else if (optionsIds.length === 0) {
+                nextState.questionsStatus[questionId] = QUE_STATUS.UNATTEMPTED;
             }
             return nextState;
         }
@@ -235,7 +235,7 @@ const TakeQuizProvider = ({ children }) => {
     const clearSelectedOptions = (questionId) => {
         dispatch({
             type: ACTION.UPDATE_SELECTED_OPTIONS,
-            payload: { questionId, optionIds: [] },
+            payload: { questionId: questionId, optionsIds: [] },
         });
     };
 

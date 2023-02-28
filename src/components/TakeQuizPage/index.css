@@ -103,3 +103,16 @@
 .multi-single {
     font-style: italic;
 }
+.next :hover {
+    color: green;
+}
+.previous :hover {
+    color: blueviolet;
+}
+.clear {
+    margin-top: 5em;
+    margin-bottom: 3em;
+}
+.clear :hover {
+    color: rgb(231, 43, 43);
+}

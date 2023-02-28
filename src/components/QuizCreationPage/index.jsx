@@ -1,20 +1,37 @@
-import { React, useState, useEffect } from 'react';
-import { Button, Input, InputNumber, Tabs, Modal, Radio, Checkbox, Typography } from 'antd';
-import axios from 'axios';
-import { GetQuizContext, GetQuizHandlerContext } from '../../contexts/CreateQuizContexts';
+import { React, useState, useEffect } from "react";
+import {
+    Button,
+    Input,
+    InputNumber,
+    Tabs,
+    Modal,
+    Radio,
+    Checkbox,
+    Typography,
+} from "antd";
+import axios from "axios";
+import {
+    GetQuizContext,
+    GetQuizHandlerContext,
+} from "../../contexts/CreateQuizContexts";
 import Question from "../Question";
-import { useParams } from 'react-router';
+import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 
-import './index.css'
+import "./index.css";
 
 const { TextArea } = Input;
 const { Title, Paragraph, Text } = Typography;
 
 const QuizCreationPage = () => {
-    const { quiz } = GetQuizContext()
-    const { handleSetQuiz, handleAddQuestion, handleQuizTitle, handleQuizDescription, handleQuizSettings } = GetQuizHandlerContext()
-    const [settings, setSettings] = useState(quiz.settings);
+    const { quiz } = GetQuizContext();
+    const {
+        handleSetQuiz,
+        handleAddQuestion,
+        handleQuizTitle,
+        handleQuizDescription,
+        handleQuizSettings,
+    } = GetQuizHandlerContext();
     const [title, setTitle] = useState(quiz.title);
     const [description, setDescription] = useState(quiz.description);
     
@@ -22,7 +39,9 @@ const QuizCreationPage = () => {
 
     const getCreatedQuiz = async () => {
         try {
-            const createdQuiz = await axios.get(`http://localhost:5000/quizzes/${id}`);
+            const createdQuiz = await axios.get(
+                `http://localhost:5000/quizzes/${id}`
+            );
             handleSetQuiz(createdQuiz.data.data[0]);
         }
         catch (err) {
@@ -35,13 +54,10 @@ const QuizCreationPage = () => {
         getCreatedQuiz();
     }, []);
     useEffect(() => {
-        handleQuizSettings(settings);
-    }, [settings]);
-    useEffect(() => {
-        handleQuizTitle(title)
+        handleQuizTitle(title);
     }, [title]);
     useEffect(() => {
-        handleQuizDescription(description)
+        handleQuizDescription(description);
     }, [description]);
 
     useEffect(() => {
@@ -57,57 +73,61 @@ const QuizCreationPage = () => {
     const validate = () => {
         if (quiz.title === "") {
             Modal.error({
-                title: 'Title !!!',
-                content: 'Quiz title is required',
+                title: "Title !!!",
+                content: "Quiz title is required",
             });
-            return false
+            return false;
         }
         for (let i = 0; i < quiz.questions.length; i++) {
             const question = quiz.questions[i];
             if (question.text === "") {
                 Modal.error({
-                    title: 'Question title !!!',
-                    content: 'Question title required',
+                    title: "Question title !!!",
+                    content: "Question title required",
                 });
                 return false;
             }
             let correctOptions = question.options.filter((option) => {
-                return option.isCorrect
-            })
+                return option.isCorrect;
+            });
             if (correctOptions.length === 0) {
                 Modal.error({
-                    title: 'Correct option !!!',
-                    content: 'Select at least 1 correct option',
+                    title: "Correct option !!!",
+                    content: "Select at least 1 correct option",
                 });
-                return false
+                return false;
             }
             question.options.filter((optTxt) => {
                 if (optTxt.text === "") {
                     Modal.error({
-                        title: 'Option text !!!',
-                        content: 'Enter option text',
+                        title: "Option text !!!",
+                        content: "Enter option text",
                     });
-                    return false
+                    return false;
                 }
-            })
+            });
             question.options = question.options.map((opt) => {
                 const { text, isCorrect } = opt;
                 return { text, isCorrect };
-            })
+            });
         }
         return true;
-    }
+    };
     const handleSave = async (event) => {
         const isValid = validate();
         if (!isValid) return;
         const quizCopy = structuredClone(quiz);
         quizCopy.questions.forEach((question) => {
             let correctOptions = question.options.filter((option) => {
-                return option.isCorrect
-            })
-            question.type = correctOptions.length > 1 ? "multiple_ans" : "single_ans";
-        })
-        const response = await axios.put(`http://localhost:5000/quizzes/${id}`, quizCopy);
+                return option.isCorrect;
+            });
+            question.type =
+                correctOptions.length > 1 ? "multiple_ans" : "single_ans";
+        });
+        const response = await axios.put(
+            `http://localhost:5000/quizzes/${id}`,
+            quizCopy
+        );
         if (response) {
             Modal.success({
                 content: "Quiz saved Successfully"
@@ -120,10 +140,10 @@ const QuizCreationPage = () => {
         }
     };
     return (
-        <div className='quizCreationPage'>
-            <Tabs defaultActiveKey='questions'>
-                <Tabs.TabPane tab='Questions' key='questions'>
-                    <div id='form'>
+        <div className="quizCreationPage">
+            <Tabs defaultActiveKey="questions">
+                <Tabs.TabPane tab="Questions" key="questions">
+                    <div id="form">
                         <div>
                             <h2>Title</h2>
                             <TextArea
@@ -153,10 +173,12 @@ const QuizCreationPage = () => {
                             <div>
                                 {quiz.questions.map((question, index) => {
                                     return (
-                                        <div key={question.id}>
-                                            <Question key={question.id}
+                                        <div key={question._id}>
+                                            <Question
                                                 title={`Question ${index + 1}`}
-                                                defaultPoints={quiz.settings.defaultPoints}
+                                                defaultPoints={
+                                                    quiz.settings.defaultPoints
+                                                }
                                                 data={question}
                                             />
                                         </div>
@@ -164,43 +186,48 @@ const QuizCreationPage = () => {
                                 })}
                             </div>
                         </div>
-                        <Button type='primary' onClick={handleAddQuestion}>
+                        <Button type="primary" onClick={handleAddQuestion}>
                             Add Question
                         </Button>
-                        <Button className='save' type="primary" htmlType='submit' onClick={handleSave}>
+                        <Button
+                            className="save"
+                            type="primary"
+                            htmlType="submit"
+                            onClick={handleSave}
+                        >
                             Save
                         </Button>
                         <Link to="/dashboard">
-                            <Button className='submit' type="primary" htmlType='submit'>
+                            <Button
+                                className="submit"
+                                type="primary"
+                                htmlType="submit"
+                            >
                                 Submit
                             </Button>
                         </Link>
                     </div>
                 </Tabs.TabPane>
-                <Tabs.TabPane tab='Settings' key='settings'>
+                <Tabs.TabPane tab="Settings" key="settings">
                     <div>
                         Default Points:
                         <InputNumber
                             type="number"
                             min={0}
-                            value={settings.defaultPoints}
+                            value={quiz.settings.defaultPoints}
                             onChange={(point) => {
-                                setSettings((olderSettings) => {
-                                    const newSettings = structuredClone(olderSettings)
-                                    newSettings.defaultPoints = point;
-                                    return newSettings;
-                                })
+                                handleQuizSettings({ defaultPoints: point });
                             }}
                         />
                     </div>
                 </Tabs.TabPane>
-                <Tabs.TabPane tab='Preview' tabKey='preview'>
+                <Tabs.TabPane tab="Preview" tabKey="preview">
                     <div>
                         {quiz.questions.map((question, index) => {
                             return (
-                                <div key={question.id}>
+                                <div key={question._id}>
                                     <Question2
-                                        key={question.id}
+                                        key={question._id}
                                         question={question}
                                     />
                                 </div>
@@ -209,14 +236,14 @@ const QuizCreationPage = () => {
                     </div>
                 </Tabs.TabPane>
             </Tabs>
-        </div >
-    )
-}
+        </div>
+    );
+};
 const Question2 = ({ question }) => {
     const { _id, text, points, options } = question;
     let correctOptions = options.filter((option) => {
-        return option.isCorrect
-    })
+        return option.isCorrect;
+    });
     const type = correctOptions.length > 1 ? "multiple_ans" : "single_ans";
     const Option = type === "single_ans" ? Radio : Checkbox;
     
@@ -236,7 +263,7 @@ const Question2 = ({ question }) => {
             </div>
             <div className="question-options-container">
                 {options.map((option) => {
-                    return <Option key={option.id}>{option.text} </Option>
+                    return <Option key={option._id}>{option.text} </Option>;
                 })}
             </div>
         </div>

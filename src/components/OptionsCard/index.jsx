@@ -28,20 +28,15 @@ const OptionsCard = (props) => {
             setOptionCount(question.options.length);
         return question.options.map((option) => {
             return (
-                <Option
-                    key={option._id}
-                    data={option}
-                    questionKey={parentKey}
-                />
+                <Col xs={22} sm={12} key={option._id}>
+                    <Option
+                        key={option._id}
+                        data={option}
+                        questionKey={parentKey}
+                    />
+                </Col>
             );
         });
-    };
-    const getOption = (option) => {
-        return (
-            <Col xs={22} sm={12} key={option.id}>
-                <Option data={option} questionKey={parentKey} />
-            </Col>
-        );
     };
     return (
         <div className="optionContainer">
@@ -60,13 +55,6 @@ const OptionsCard = (props) => {
             >
                 <Row justify="space-around" gutter={24}>
                     {addOptions()}
-                    {/* {quiz.questions
-                        .find((question) => question.id === parentKey)
-                        .options.map((option) => {
-                            return (
-                                <Option data={option} questionKey={parentKey} />
-                            );
-                        })} */}
                 </Row>
             </Card>
         </div>

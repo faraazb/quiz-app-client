@@ -26,7 +26,9 @@ const QuizCreationPage = () => {
             handleSetQuiz(createdQuiz.data.data[0]);
         }
         catch (err) {
-            console.log(err);
+            Modal.error({
+                title: 'There is some error in the server',
+            });
         }
     };
     useEffect(() => {
@@ -127,7 +129,7 @@ const QuizCreationPage = () => {
                                 allowClear={true}
                                 autoSize
                                 autoFocus
-                                onChange={(t)=>{
+                                onChange={(t) => {
                                     setTitle(t.target.value);
                                 }}
                                 value={quiz.title}
@@ -139,7 +141,7 @@ const QuizCreationPage = () => {
                                 className="description"
                                 allowClear={true}
                                 autoFocus
-                                onChange={(d)=>{
+                                onChange={(d) => {
                                     setDescription(d.target.value);
                                 }}
                                 value={quiz.description}

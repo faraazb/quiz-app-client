@@ -34,7 +34,7 @@ const quizReducer = (quiz, action) => {
     let result, question;
     const newQuiz = structuredClone(quiz);
     switch (action.type) {
-        case ACTIONS.SETQUIZ:
+        case ACTIONS.SETQUIZ: {
             let { _id, title, description, settings, questions } = action.quiz;
             newQuiz._id = _id;
             newQuiz.title = title;
@@ -47,29 +47,37 @@ const quizReducer = (quiz, action) => {
                 return question;
             });
             return newQuiz;
-        case ACTIONS.SETQUIZTITLE:
+        }
+        case ACTIONS.SETQUIZTITLE: {
             newQuiz.title = action.title;
             return newQuiz;
-        case ACTIONS.SETQUIZDESC:
+        }
+        case ACTIONS.SETQUIZDESC: {
             newQuiz.description = action.description;
             return newQuiz;
-        case ACTIONS.SETQUIZSETTINGS:
-            newQuiz.settings = action.settings;
+        }
+        case ACTIONS.SETQUIZSETTINGS: {
+            Object.keys(action.updateObject).forEach((key) => {
+                newQuiz.settings[key] = action.updateObject[key];
+            });
             newQuiz.questions.forEach((question) => {
                 if (question.isPointDefault) {
-                    question.points = quiz.settings.defaultPoints;
+                    question.points = newQuiz.settings.defaultPoints;
                 }
             });
             return newQuiz;
-        case ACTIONS.ADDQUESTION:
+        }
+        case ACTIONS.ADDQUESTION: {
             newQuiz.questions.push(action.question);
             return newQuiz;
-        case ACTIONS.DELETEQUESTION:
-            newQuiz.questions = quiz.questions.filter(
+        }
+        case ACTIONS.DELETEQUESTION: {
+            newQuiz.questions = newQuiz.questions.filter(
                 (question) => question._id !== action.questionId
             );
             return newQuiz;
-        case ACTIONS.UPDATEQUESTION:
+        }
+        case ACTIONS.UPDATEQUESTION: {
             question = newQuiz.questions.find(
                 (question) => question._id === action.question._id
             );
@@ -79,14 +87,16 @@ const quizReducer = (quiz, action) => {
             question.isPointDefault = isPointDefault;
             question.points = points;
             return newQuiz;
-        case ACTIONS.ADDOPTION:
+        }
+        case ACTIONS.ADDOPTION: {
             question = newQuiz.questions.find(
                 (question) => question._id === action.questionId
             );
             if (!question) return newQuiz;
             question.options.push(action.option);
             return newQuiz;
-        case ACTIONS.DELETEOPTION:
+        }
+        case ACTIONS.DELETEOPTION: {
             result = newQuiz.questions.find(
                 (question) => question._id === action.questionId
             );
@@ -98,19 +108,26 @@ const quizReducer = (quiz, action) => {
                 (option) => option._id !== action.optionId
             );
             return newQuiz;
-        case ACTIONS.UPDATEOPTION:
+        }
+        case ACTIONS.UPDATEOPTION: {
             question = newQuiz.questions.find(
                 (question) => question._id === action.questionId
             );
             if (!question) return newQuiz;
             result = question.options.findIndex(
-                (option) => option._id === action.option._id
+                (option) => option._id === action.updateObject._id
             );
             if (result === -1) return newQuiz;
-            question.options[result] = action.option;
+            const option = structuredClone(question.options[result]);
+            Object.keys(action.updateObject).forEach((key) => {
+                if (key !== "_id") option[key] = action.updateObject[key];
+            });
+            question.options[result] = option;
             return newQuiz;
-        default:
+        }
+        default: {
             return newQuiz;
+        }
     }
 };
 
@@ -125,8 +142,8 @@ const QuizProvider = (props) => {
     const handleQuizDescription = (description) => {
         dispatch({ type: ACTIONS.SETQUIZDESC, description });
     };
-    const handleQuizSettings = (settings) => {
-        dispatch({ type: ACTIONS.SETQUIZSETTINGS, settings });
+    const handleQuizSettings = (updateObject) => {
+        dispatch({ type: ACTIONS.SETQUIZSETTINGS, updateObject });
     };
     const handleAddQuestion = () => {
         const questionId = uniqid();
@@ -172,11 +189,11 @@ const QuizProvider = (props) => {
             optionId,
         });
     };
-    const handleUpdateOption = (questionId, option) => {
+    const handleUpdateOption = (questionId, updateObject) => {
         dispatch({
             type: ACTIONS.UPDATEOPTION,
             questionId,
-            option,
+            updateObject,
         });
     };
     return (

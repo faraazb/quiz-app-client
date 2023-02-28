@@ -31,7 +31,6 @@ const QuizCreationPage = () => {
         handleQuizDescription,
         handleQuizSettings,
     } = GetQuizHandlerContext();
-    const [settings, setSettings] = useState(quiz.settings);
     const [title, setTitle] = useState(quiz.title);
     const [description, setDescription] = useState(quiz.description);
     
@@ -51,9 +50,6 @@ const QuizCreationPage = () => {
     useEffect(() => {
         getCreatedQuiz();
     }, []);
-    useEffect(() => {
-        handleQuizSettings(settings);
-    }, [settings]);
     useEffect(() => {
         handleQuizTitle(title);
     }, [title]);
@@ -171,9 +167,8 @@ const QuizCreationPage = () => {
                             <div>
                                 {quiz.questions.map((question, index) => {
                                     return (
-                                        <div key={question.id}>
+                                        <div key={question._id}>
                                             <Question
-                                                key={question.id}
                                                 title={`Question ${index + 1}`}
                                                 defaultPoints={
                                                     quiz.settings.defaultPoints
@@ -213,14 +208,9 @@ const QuizCreationPage = () => {
                         <InputNumber
                             type="number"
                             min={0}
-                            value={settings.defaultPoints}
+                            value={quiz.settings.defaultPoints}
                             onChange={(point) => {
-                                setSettings((olderSettings) => {
-                                    const newSettings =
-                                        structuredClone(olderSettings);
-                                    newSettings.defaultPoints = point;
-                                    return newSettings;
-                                });
+                                handleQuizSettings({ defaultPoints: point });
                             }}
                         />
                     </div>
@@ -229,9 +219,9 @@ const QuizCreationPage = () => {
                     <div>
                         {quiz.questions.map((question, index) => {
                             return (
-                                <div key={question.id}>
+                                <div key={question._id}>
                                     <Question2
-                                        key={question.id}
+                                        key={question._id}
                                         question={question}
                                     />
                                 </div>
@@ -267,7 +257,7 @@ const Question2 = ({ question }) => {
             </div>
             <div className="question-options-container">
                 {options.map((option) => {
-                    return <Option key={option.id}>{option.text} </Option>;
+                    return <Option key={option._id}>{option.text} </Option>;
                 })}
             </div>
         </div>

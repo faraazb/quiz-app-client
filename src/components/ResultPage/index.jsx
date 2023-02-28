@@ -1,7 +1,7 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Button, Result, Typography, message } from 'antd';
-import { useParams, Link } from 'react-router-dom';
+import { Button, Result, Typography, message } from "antd";
+import { useParams, Link } from "react-router-dom";
+import { getSubmissionsByIdApi } from "../../api";
 
 const { Paragraph } = Typography;
 
@@ -11,13 +11,13 @@ const ResultPage = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const getSubmission = async () => {
         try {
-            const submission = await axios.get(`http://localhost:5000/submissions/${submissionId}`);
-            console.log(submission);
+            const submission = await getSubmissionsByIdApi(submissionId);
             setSubmission(submission.data);
-            // console.log(submission.data.data);
-        }
-        catch (err) {
-            messageApi.open({ type: "error", content: "Failed to get result!", });
+        } catch (err) {
+            messageApi.open({
+                type: "error",
+                content: "Failed to get result!",
+            });
         }
     };
     useEffect(() => {
@@ -25,20 +25,29 @@ const ResultPage = () => {
     }, [submissionId]);
     return (
         <>
-            { contextHolder }
+            {contextHolder}
             <Result
                 status="success"
                 title="Your Response is Submitted Successfully!"
                 extra={[
-                    <Paragraph key="score">Your Score: {submission !== null && submission.data.score}</Paragraph>,
-                    <Paragraph key="correctAnswers">Number of Correct Answers: {submission !== null && submission.data.correctlyAnsweredCount}</Paragraph>,
+                    <Paragraph key="score">
+                        Your Score:{" "}
+                        {submission !== null && submission.data.score}
+                    </Paragraph>,
+                    <Paragraph key="correctAnswers">
+                        Number of Correct Answers:{" "}
+                        {submission !== null &&
+                            submission.data.correctlyAnsweredCount}
+                    </Paragraph>,
                     <Link key="button" to={"/"}>
-                        <Button type="primary" key="back">Back to Home</Button>
+                        <Button type="primary" key="back">
+                            Back to Home
+                        </Button>
                     </Link>,
                 ]}
             />
         </>
-    )
+    );
 };
 
 export default ResultPage;

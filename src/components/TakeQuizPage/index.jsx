@@ -3,13 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Button, Checkbox, Radio, Modal, Typography, Skeleton } from "antd";
 import { CheckCircleFilled, ExclamationCircleFilled } from "@ant-design/icons";
 import { red, green } from "@ant-design/colors";
-import axios from "axios";
 import {
     TakeQuizContext,
     TakeQuizHandlerContext,
 } from "../../contexts/TakeQuizContext";
 import StartQuizPage from "../StartQuizPage";
 import NavigationPane from "../NavigationPane";
+import { getQuestionsApi, getQuestionByIdApi } from "../../api";
 import "./index.css";
 
 const { Title, Paragraph, Text } = Typography;
@@ -47,9 +47,7 @@ const TakeQuizPage = () => {
     useEffect(() => {
         (async function () {
             if (started) {
-                const response = await axios.get(
-                    `http://localhost:5000/quizzes/${quizId}/questions`
-                );
+                const response = await getQuestionsApi(quizId);
                 updateQuestionIds(
                     response.data.data.map((question) => question.id)
                 );
@@ -68,8 +66,8 @@ const TakeQuizPage = () => {
     useEffect(() => {
         (async function () {
             if (questionIds.length > 0 && !isCurrentQuestionFetched) {
-                const response = await axios.get(
-                    `http://localhost:5000/questions/${questionIds[currentQuestion]}`
+                const response = await getQuestionByIdApi(
+                    questionIds[currentQuestion]
                 );
                 addQuestion(response.data.data[0]);
             }
@@ -247,14 +245,15 @@ const CheckboxOptions = () => {
 };
 
 const Question = () => {
-    const { getCurrentQuestion, clearSelectedOptions } = TakeQuizHandlerContext();
+    const { getCurrentQuestion, clearSelectedOptions } =
+        TakeQuizHandlerContext();
     const { _id: questionId, type, text, points } = getCurrentQuestion();
 
     const Options = type === "single_ans" ? RadioOptions : CheckboxOptions;
 
     const clearOptions = () => {
         clearSelectedOptions(questionId);
-    }
+    };
 
     const message =
         type === "single_ans"
@@ -274,8 +273,8 @@ const Question = () => {
                 <Options />
             </div>
             <div>
-                <Button
-                    className="clear" onClick={clearOptions}>Clear
+                <Button className="clear" onClick={clearOptions}>
+                    Clear
                 </Button>
             </div>
         </div>

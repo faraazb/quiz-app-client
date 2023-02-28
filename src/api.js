@@ -52,6 +52,17 @@ async function saveSubmission(quizId, submmission) {
     }
 }
 
+async function getSubmissionsByIdApi(id) {
+    return await api.get(`submissions/${id}`);
+}
+
+async function getQuestionsApi(quizId) {
+    return await api.get(`quizzes/${quizId}/questions`);
+}
+async function getQuestionByIdApi(id) {
+    return await api.get(`questions/${id}`);
+}
+
 export {
     getSubmissions,
     saveSubmission,
@@ -59,4 +70,7 @@ export {
     postQuizzesApi,
     getQuizzesByIdApi,
     putQuizzesByIdApi,
+    getSubmissionsByIdApi,
+    getQuestionsApi,
+    getQuestionByIdApi,
 };

@@ -19,6 +19,13 @@ async function postQuizzesApi(values) {
         throw err;
     }
 }
+async function getQuizzesByIdApi(id) {
+    return await api.get(`quizzes/${id}`);
+}
+async function putQuizzesByIdApi(id, values) {
+    console.log(id, values);
+    return await api.put(`quizzes/${id}`, values);
+}
 async function getSubmissions(quizId) {
     try {
         const response = await api.get(`quizzes/${quizId}/submissions`);
@@ -45,4 +52,11 @@ async function saveSubmission(quizId, submmission) {
     }
 }
 
-export { getSubmissions, saveSubmission, getQuizzesApi, postQuizzesApi };
+export {
+    getSubmissions,
+    saveSubmission,
+    getQuizzesApi,
+    postQuizzesApi,
+    getQuizzesByIdApi,
+    putQuizzesByIdApi,
+};

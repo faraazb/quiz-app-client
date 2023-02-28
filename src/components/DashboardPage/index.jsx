@@ -1,6 +1,5 @@
 import "./dashboardPage.css";
 import { Card, Col, Row, Form, Input, Modal, Button, message } from "antd";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { CopyOutlined, EditOutlined } from "@ant-design/icons";

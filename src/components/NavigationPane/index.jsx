@@ -57,6 +57,7 @@ const NavigationPane = (props) => {
                 const response = await saveSubmission(quizId, submissionObject);
                 setSubmissionResponse(response);
             } catch (err) {
+                console.error("Error while submitting quiz", err)
                 const { code, message } = err;
                 if (code === "ERR_NETWORK") {
                     setResponseError(new String(message));

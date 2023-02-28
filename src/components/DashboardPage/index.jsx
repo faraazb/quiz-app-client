@@ -111,7 +111,7 @@ const DashboardPage = () => {
                                             key="copy"
                                             onClick={() => {
                                                 navigator.clipboard.writeText(
-                                                    `http://localhost:3000/quiz/${quiz.id}`
+                                                    `${window.location.origin}/quiz/${quiz.id}`
                                                 );
                                                 messageApi.open({
                                                     type: "success",

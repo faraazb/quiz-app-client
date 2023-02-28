@@ -5,7 +5,20 @@ const API_BASE_URL = "http://localhost:5000/";
 const api = axios.create({
     baseURL: API_BASE_URL,
 });
-
+async function getQuizzesApi() {
+    try {
+        return await api.get("quizzes/");
+    } catch (err) {
+        throw err;
+    }
+}
+async function postQuizzesApi(values) {
+    try {
+        return await api.post("quizzes/", values);
+    } catch (err) {
+        throw err;
+    }
+}
 async function getSubmissions(quizId) {
     try {
         const response = await api.get(`quizzes/${quizId}/submissions`);
@@ -32,4 +45,4 @@ async function saveSubmission(quizId, submmission) {
     }
 }
 
-export { getSubmissions, saveSubmission };
+export { getSubmissions, saveSubmission, getQuizzesApi, postQuizzesApi };

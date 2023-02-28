@@ -9,7 +9,6 @@ import {
     Checkbox,
     Typography,
 } from "antd";
-import axios from "axios";
 import {
     GetQuizContext,
     GetQuizHandlerContext,
@@ -17,7 +16,7 @@ import {
 import Question from "../Question";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
-
+import { getQuizzesByIdApi, putQuizzesByIdApi } from "../../api";
 import "./index.css";
 
 const { TextArea } = Input;
@@ -39,9 +38,7 @@ const QuizCreationPage = () => {
 
     const getCreatedQuiz = async () => {
         try {
-            const createdQuiz = await axios.get(
-                `http://localhost:5000/quizzes/${id}`
-            );
+            const createdQuiz = await getQuizzesByIdApi(id);
             handleSetQuiz(createdQuiz.data.data[0]);
         }
         catch (err) {
@@ -124,10 +121,7 @@ const QuizCreationPage = () => {
             question.type =
                 correctOptions.length > 1 ? "multiple_ans" : "single_ans";
         });
-        const response = await axios.put(
-            `http://localhost:5000/quizzes/${id}`,
-            quizCopy
-        );
+        const response = await putQuizzesByIdApi(id, quizCopy);
         if (response) {
             Modal.success({
                 content: "Quiz saved Successfully"

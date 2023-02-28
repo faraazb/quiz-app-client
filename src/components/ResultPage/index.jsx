@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Result, Typography, message, Modal } from "antd";
 import { useParams, Link } from "react-router-dom";
-
+import { getSubmissionsByIdApi } from "../../api";
 const { Paragraph } = Typography;
 
 const ResultPage = () => {

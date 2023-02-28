@@ -76,7 +76,9 @@ const DashboardPage = () => {
             // console.log(quizzes.data.data);
         }
         catch (err) {
-            console.log(err);
+            Modal.error({
+                title: 'Error in fetching the quizzes',
+            });
         }
     };
     useEffect(() => {

@@ -35,7 +35,6 @@ const QuizCreationPage = () => {
     const [settings, setSettings] = useState(quiz.settings);
     const [title, setTitle] = useState(quiz.title);
     const [description, setDescription] = useState(quiz.description);
-    // console.log(quiz)
     const { id } = useParams();
 
     const getCreatedQuiz = async () => {
@@ -171,9 +170,8 @@ const QuizCreationPage = () => {
                             <div>
                                 {quiz.questions.map((question, index) => {
                                     return (
-                                        <div key={question.id}>
+                                        <div key={question._id}>
                                             <Question
-                                                key={question.id}
                                                 title={`Question ${index + 1}`}
                                                 defaultPoints={
                                                     quiz.settings.defaultPoints
@@ -229,9 +227,9 @@ const QuizCreationPage = () => {
                     <div>
                         {quiz.questions.map((question, index) => {
                             return (
-                                <div key={question.id}>
+                                <div key={question._id}>
                                     <Question2
-                                        key={question.id}
+                                        key={question._id}
                                         question={question}
                                     />
                                 </div>
@@ -250,7 +248,6 @@ const Question2 = ({ question }) => {
     });
     const type = correctOptions.length > 1 ? "multiple_ans" : "single_ans";
     const Option = type === "single_ans" ? Radio : Checkbox;
-    console.log(options);
     const message =
         type === "single_ans"
             ? "This question has a single answer"
@@ -267,7 +264,7 @@ const Question2 = ({ question }) => {
             </div>
             <div className="question-options-container">
                 {options.map((option) => {
-                    return <Option key={option.id}>{option.text} </Option>;
+                    return <Option key={option._id}>{option.text} </Option>;
                 })}
             </div>
         </div>

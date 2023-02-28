@@ -122,7 +122,7 @@ const TakeQuizPage = () => {
 
     const submit = () => {
         setIsSubmitting(true);
-        console.log(getAnswered());
+        // console.log(getAnswered());
         // the submit request
         setTimeout(() => {
             setIsSubmitting(false);
@@ -247,10 +247,14 @@ const CheckboxOptions = () => {
 };
 
 const Question = () => {
-    const { getCurrentQuestion } = TakeQuizHandlerContext();
-    const { _id, type, text, points } = getCurrentQuestion();
+    const { getCurrentQuestion, clearSelectedOptions } = TakeQuizHandlerContext();
+    const { _id: questionId, type, text, points } = getCurrentQuestion();
 
     const Options = type === "single_ans" ? RadioOptions : CheckboxOptions;
+
+    const clearOptions = () => {
+        clearSelectedOptions(questionId);
+    }
 
     const message =
         type === "single_ans"
@@ -268,6 +272,11 @@ const Question = () => {
             </div>
             <div className="question-options-container">
                 <Options />
+            </div>
+            <div>
+                <Button
+                    className="clear" onClick={clearOptions}>Clear
+                </Button>
             </div>
         </div>
     );

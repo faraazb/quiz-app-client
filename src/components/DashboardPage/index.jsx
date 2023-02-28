@@ -37,13 +37,21 @@ const QuizCreateForm = ({ open, onCreate, onCancel }) => {
                     rules={[
                         {
                             required: true,
-                            message: 'Please input the title of quiz!',
+                            message: 'Please enter the title of quiz!',
                         },
                     ]}
                 >
                     <Input />
                 </Form.Item>
-                <Form.Item name="description" label="Description">
+                <Form.Item 
+                    name="description" 
+                    label="Description"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Please enter the description of quiz!',
+                        },
+                    ]}>
                     <Input.TextArea />
                 </Form.Item>
             </Form>
@@ -68,7 +76,9 @@ const DashboardPage = () => {
             // console.log(quizzes.data.data);
         }
         catch (err) {
-            console.log(err);
+            Modal.error({
+                title: 'Error in fetching the quizzes',
+            });
         }
     };
     useEffect(() => {

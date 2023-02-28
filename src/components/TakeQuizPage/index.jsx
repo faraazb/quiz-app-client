@@ -122,7 +122,7 @@ const TakeQuizPage = () => {
 
     const submit = () => {
         setIsSubmitting(true);
-        console.log(getAnswered());
+        // console.log(getAnswered());
         // the submit request
         setTimeout(() => {
             setIsSubmitting(false);

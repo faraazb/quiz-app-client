@@ -17,7 +17,7 @@ const QuizCreationPage = () => {
     const [settings, setSettings] = useState(quiz.settings);
     const [title, setTitle] = useState(quiz.title);
     const [description, setDescription] = useState(quiz.description);
-    // console.log(quiz)
+    
     const { id } = useParams();
 
     const getCreatedQuiz = async () => {
@@ -26,7 +26,9 @@ const QuizCreationPage = () => {
             handleSetQuiz(createdQuiz.data.data[0]);
         }
         catch (err) {
-            console.log(err);
+            Modal.error({
+                title: 'Could not fetch the quiz data !!!',
+            });
         }
     };
     useEffect(() => {
@@ -112,7 +114,9 @@ const QuizCreationPage = () => {
             })
         }
         else {
-            console.log("response", response)
+            Modal.error({
+                title: 'Could not save the quiz !!!',
+            });
         }
     };
     return (
@@ -127,7 +131,7 @@ const QuizCreationPage = () => {
                                 allowClear={true}
                                 autoSize
                                 autoFocus
-                                onChange={(t)=>{
+                                onChange={(t) => {
                                     setTitle(t.target.value);
                                 }}
                                 value={quiz.title}
@@ -139,7 +143,7 @@ const QuizCreationPage = () => {
                                 className="description"
                                 allowClear={true}
                                 autoFocus
-                                onChange={(d)=>{
+                                onChange={(d) => {
                                     setDescription(d.target.value);
                                 }}
                                 value={quiz.description}
@@ -215,7 +219,7 @@ const Question2 = ({ question }) => {
     })
     const type = correctOptions.length > 1 ? "multiple_ans" : "single_ans";
     const Option = type === "single_ans" ? Radio : Checkbox;
-    console.log(options);
+    
     const message =
         type === "single_ans"
             ? "This question has a single answer"

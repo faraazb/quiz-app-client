@@ -17,7 +17,7 @@ const QuizCreationPage = () => {
     const [settings, setSettings] = useState(quiz.settings);
     const [title, setTitle] = useState(quiz.title);
     const [description, setDescription] = useState(quiz.description);
-    // console.log(quiz)
+    
     const { id } = useParams();
 
     const getCreatedQuiz = async () => {
@@ -27,7 +27,7 @@ const QuizCreationPage = () => {
         }
         catch (err) {
             Modal.error({
-                title: 'There is some error in the server',
+                title: 'Could not fetch the quiz data !!!',
             });
         }
     };
@@ -114,7 +114,9 @@ const QuizCreationPage = () => {
             })
         }
         else {
-            console.log("response", response)
+            Modal.error({
+                title: 'Could not save the quiz !!!',
+            });
         }
     };
     return (
@@ -217,7 +219,7 @@ const Question2 = ({ question }) => {
     })
     const type = correctOptions.length > 1 ? "multiple_ans" : "single_ans";
     const Option = type === "single_ans" ? Radio : Checkbox;
-    console.log(options);
+    
     const message =
         type === "single_ans"
             ? "This question has a single answer"
